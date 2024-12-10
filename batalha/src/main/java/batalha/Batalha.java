@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Batalha {
 
-    void determinarQuemComecaAtacando(Personagem personagem1, Personagem personagem2) {
+    String determinarQuemComecaAtacando(Personagem personagem1, Personagem personagem2) {
         //O personagem mais rapido começa
         //Se empatar, é feito um sorteio
 
@@ -15,20 +15,20 @@ public class Batalha {
             int randomico = secureRandom.nextInt(2) + 1;
             if (randomico==1){
                 //personagem 1 começa
-                System.out.println("personagem 1 começa");
+                return "personagem 1 começa";
             }else{
                 //personagem 2 começa
-                System.out.println("personagem 2 começa");
+                return "personagem 2 começa";
             }
 
 
         } else if (personagem1.getVelocidade()>personagem2.getVelocidade()) {
             //Personagem 1 começa
-            System.out.println("personagem 1 começa");
+            return "personagem 1 começa";
 
         }else{
             //Personagem 2 começa
-            System.out.println("personagem 2 começa");
+            return "personagem 2 começa";
 
         }
 
@@ -70,21 +70,36 @@ public class Batalha {
 
     void atacar(Personagem quemAtaca , Personagem quemDefende){
 
-        //gera aleatorio e usa em VerificarEvasão
+        // FASE 1 - GERAR RANDOMICO E CHECAR EVASAO
+        // gera aleatorio e usa em VerificarEvasão
         SecureRandom randomEvasao = new SecureRandom();
         int randomico = randomEvasao.nextInt(100) + 1;
         boolean evadiu = verificarEvasao(quemAtaca, quemDefende, randomico);
 
         if (!evadiu) {
-            //gera aleatorio e usa em VerificarEvasão
+
+            // FASE 2 - GERAR RANDOMICO E CALCULAR DANO BASE
+            // gera aleatorio e usa em VerificarEvasão
             SecureRandom randomDanoBase = new SecureRandom();
             int variacaoDeDano = randomDanoBase.nextInt(5);
             int danoBase = calcularDanoBase(quemAtaca, variacaoDeDano);
 
-
+            // FASE 3 - CHECAR GOLPE CRITICO, CALCULAR DANO FINAL
+            // E REMOVER HP DO DEFENSOR
             boolean golpeCritico = temGolpeCritico(); //boolean
             int danoFinal = calcularDanoFinal(danoBase, golpeCritico, quemDefende);
             removerHP(danoFinal, quemDefende);
+
+
+//            //FASE 4 - CHECAR SE HOUVE VENCEDORES E DETERMINA-LO
+//            temVencedor(quemAtaca, quemDefende);
+//
+//            if (temVencedor(quemAtaca, quemDefende)) {
+//                //Imprime mensagem informando o vencedor
+//                quemVenceu(quemAtaca, quemDefende);
+//            }
+
+
         }else{
             //Defensor se evadiu do ataque
             //Sem mais ações na rodada
@@ -153,6 +168,36 @@ public class Batalha {
 
     }
 
+    boolean temVencedor(Personagem P1, Personagem P2 ) {
+        if (P1.getVida() > 0  &&  P2.getVida() > 0) {
+            // A batalha continua
+            return false;
+        } else if (P1.getVida() > 0  &&  P2.getVida() <= 0) {
+            // A batalha acabou
+            // Personagem 1 venceu
+            return true;
+
+        }else{
+            // if(P1.getVida() <= 0  &&  P2.getVida() > 0)
+            // A batalha acabou
+            // Personagem 2 venceu
+            return true;
+
+        }
+
+
+    }
+
+     void quemVenceu(Personagem p1, Personagem p2) {
+        if (p2.getVida()<=0){
+            //PERSONAGEM 1 VENCEU
+            System.out.println("O vencedor do confronto foi: "+ p1);
+
+        }else{
+            //PERSONAGEM 2 VENCEU
+            System.out.println("O vencedor do confronto foi: "+ p2);
+        }
+    }
 
 
 }

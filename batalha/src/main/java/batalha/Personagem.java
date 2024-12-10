@@ -12,6 +12,7 @@ public abstract class Personagem {
 	private Integer vida;
 
 	Personagem() {
+		this.vida = 100;
 	}
 
 	public Personagem(Integer ataque, Integer defesa, Integer resistencia, Integer velocidade) {
@@ -19,6 +20,7 @@ public abstract class Personagem {
 		this.defesa = defesa;
 		this.resistencia = resistencia;
 		this.velocidade = velocidade;
+		this.vida = 100;
 
 		checarTotal();
 		checarValorMinimo();
@@ -27,7 +29,7 @@ public abstract class Personagem {
 
 	abstract void checarRegraDeClasse();
 
-	private void checarValorMinimo() {
+	final void checarValorMinimo() {
 		checarValorMinimo(ataque);
 		checarValorMinimo(defesa);
 		checarValorMinimo(velocidade);
