@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: batalha.BatalhaTest
 -------------------------------------------------------------------------------
-Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.122 s -- in batalha.BatalhaTest
+Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.175 s - in batalha.BatalhaTest

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Guerreiro.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Batalhas</a> &gt; <a href="index.source.html" class="el_package">batalha</a> &gt; <span class="el_source">Guerreiro.java</span></div><h1>Guerreiro.java</h1><pre class="source lang-java linenums">package batalha;
+
+public class Guerreiro extends Personagem {
+
+	public Guerreiro(Integer ataque, Integer defesa, Integer velocidade, Integer resistencia) {
+<span class="nc" id="L6">		super(ataque, defesa, velocidade, resistencia);</span>
+<span class="nc" id="L7">	}</span>
+
+<span class="fc" id="L9">	public Guerreiro(){</span>
+
+<span class="fc" id="L11">	}</span>
+
+	@Override
+	final void checarRegraDeClasse() {
+		// TODO Auto-generated method stub
+		//atk e res &gt;&gt;&gt; vel e def
+
+
+<span class="fc" id="L19">		int velocidade = this.getVelocidade();</span>
+<span class="fc" id="L20">		int resistencia = this.getResistencia();</span>
+<span class="fc" id="L21">		int ataque = this.getAtaque();</span>
+<span class="fc" id="L22">		int defesa = this.getDefesa();</span>
+
+<span class="pc bpc" id="L24" title="21 of 42 branches missed.">		if(		(resistencia &gt; ataque &amp;&amp; ataque &gt; defesa &amp;&amp; defesa &gt; velocidade) ||</span>
+				(resistencia &gt; ataque &amp;&amp; ataque &gt; velocidade &amp;&amp; velocidade &gt; defesa) ||
+				(ataque &gt; resistencia &amp;&amp; resistencia &gt; defesa &amp;&amp; defesa &gt; velocidade) ||
+				(ataque &gt; resistencia &amp;&amp; resistencia &gt; velocidade &amp;&amp; velocidade &gt; defesa) ||
+				(ataque == resistencia &amp;&amp; resistencia &gt; velocidade &amp;&amp; velocidade &gt; defesa) ||
+				(ataque == resistencia &amp;&amp; resistencia &gt; defesa &amp;&amp; defesa &gt; velocidade) ||
+				(ataque == resistencia &amp;&amp; resistencia &gt; defesa &amp;&amp; defesa == velocidade)){
+			//é guerreiro
+
+		}else{
+<span class="fc" id="L34">			throw new IllegalStateException(&quot;Os atributos não seguem a regra de classe para Guerreiro!&quot;);</span>
+		}
+
+<span class="fc" id="L37">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

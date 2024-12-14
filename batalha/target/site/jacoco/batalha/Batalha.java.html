@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Batalha.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Batalhas</a> &gt; <a href="index.source.html" class="el_package">batalha</a> &gt; <span class="el_source">Batalha.java</span></div><h1>Batalha.java</h1><pre class="source lang-java linenums">package batalha;
+
+import java.security.SecureRandom;
+import java.util.Random;
+
+<span class="fc" id="L6">public class Batalha {</span>
+
+    String determinarQuemComecaAtacando(Personagem personagem1, Personagem personagem2) {
+        //O personagem mais rapido começa
+        //Se empatar, é feito um sorteio
+
+<span class="pc bpc" id="L12" title="1 of 2 branches missed.">        if (personagem1.getVelocidade().equals(personagem2.getVelocidade())) {</span>
+            //escolhe aleatoriamente
+<span class="nc" id="L14">            SecureRandom secureRandom = new SecureRandom();</span>
+<span class="nc" id="L15">            int randomico = secureRandom.nextInt(2) + 1;</span>
+<span class="nc bnc" id="L16" title="All 2 branches missed.">            if (randomico==1){</span>
+                //personagem 1 começa
+<span class="nc" id="L18">                return &quot;personagem 1 começa&quot;;</span>
+            }else{
+                //personagem 2 começa
+<span class="nc" id="L21">                return &quot;personagem 2 começa&quot;;</span>
+            }
+
+
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        } else if (personagem1.getVelocidade()&gt;personagem2.getVelocidade()) {</span>
+            //Personagem 1 começa
+<span class="fc" id="L27">            return &quot;personagem 1 começa&quot;;</span>
+
+        }else{
+            //Personagem 2 começa
+<span class="nc" id="L31">            return &quot;personagem 2 começa&quot;;</span>
+
+        }
+
+    }
+
+    boolean verificarEvasao(Personagem atacante, Personagem defensor, int randomico) {
+        //        REGRAS PARA EVASÃO (EVITAR GOLPES)
+        //
+        //        SEJA X UM ATACANTE E Y UM DEFENSOR
+        //
+        //        -FORMULA: CHANCE DE EVASÃO(%) = MIN(50, (Y.VEL - X.VEL) * 2)
+        //                -CHANCE MAXIMA DE EVASÃO: 50%
+        //                -SE: Y.VEL =&lt; X.VEL    ENTÃO A CHANCE DE EVASÃO É 0%
+        //
+        //                VERIFICAÇÃO DAS REGRAS:
+        //        -CALCULAR CHANCE DE EVASÃO USANDO A FORMULA
+        //        -GERAR UM NUMERO ALEATORIO ENTRE 1 E 100 ( SEJA ELE CHAMADO DE &quot;EVASÃO&quot;)
+        //        -SE &quot;EVASÃO&quot; =&lt; CHANCE DE EVASÃO   ENTÃO O ATAQUE É EVITADO
+
+        //Formula de evasão
+<span class="fc" id="L52">        int chanceDeEvasao = Math.min(50,(defensor.getVelocidade()-atacante.getVelocidade())*2);</span>
+        //Numero Aleatorio
+
+        //Hora de determinar a evasão
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (atacante.getVelocidade().equals(defensor.getVelocidade())) {</span>
+            //Não haverá evasão
+<span class="fc" id="L58">            return false;</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        } else if (randomico&lt;=chanceDeEvasao) {</span>
+            //O defensor irá se evadir
+<span class="fc" id="L61">            return true;</span>
+
+        }else{
+            //Não haverá evasão
+<span class="fc" id="L65">            return false;</span>
+        }
+
+
+    }
+
+    void atacar(Personagem quemAtaca , Personagem quemDefende){
+
+        // FASE 1 - GERAR RANDOMICO E CHECAR EVASAO
+        // gera aleatorio e usa em VerificarEvasão
+<span class="nc" id="L75">        SecureRandom randomEvasao = new SecureRandom();</span>
+<span class="nc" id="L76">        int randomico = randomEvasao.nextInt(100) + 1;</span>
+<span class="nc" id="L77">        boolean evadiu = verificarEvasao(quemAtaca, quemDefende, randomico);</span>
+
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (!evadiu) {</span>
+
+            // FASE 2 - GERAR RANDOMICO E CALCULAR DANO BASE
+            // gera aleatorio e usa em VerificarEvasão
+<span class="nc" id="L83">            SecureRandom randomDanoBase = new SecureRandom();</span>
+<span class="nc" id="L84">            int variacaoDeDano = randomDanoBase.nextInt(5);</span>
+<span class="nc" id="L85">            int danoBase = calcularDanoBase(quemAtaca, variacaoDeDano);</span>
+
+            // FASE 3 - CHECAR GOLPE CRITICO, CALCULAR DANO FINAL
+            // E REMOVER HP DO DEFENSOR
+<span class="nc" id="L89">            boolean golpeCritico = temGolpeCritico(); //boolean</span>
+<span class="nc" id="L90">            int danoFinal = calcularDanoFinal(danoBase, golpeCritico, quemDefende);</span>
+<span class="nc" id="L91">            removerHP(danoFinal, quemDefende);</span>
+
+
+//            //FASE 4 - CHECAR SE HOUVE VENCEDORES E DETERMINA-LO
+//            temVencedor(quemAtaca, quemDefende);
+//
+//            if (temVencedor(quemAtaca, quemDefende)) {
+//                //Imprime mensagem informando o vencedor
+//                quemVenceu(quemAtaca, quemDefende);
+//            }
+
+
+        }else{
+            //Defensor se evadiu do ataque
+            //Sem mais ações na rodada
+        }
+<span class="nc" id="L107">    }</span>
+
+
+    //refatorado para simplificação
+    int calcularDanoBase(Personagem quemAtaca, int variacaoDeDano) {
+<span class="fc" id="L112">        double multiplicador = 0.8 + (variacaoDeDano * 0.1); // Variação de 0 a 0.4</span>
+<span class="fc" id="L113">        return (int) Math.round(quemAtaca.getAtaque() * multiplicador);</span>
+    }
+
+
+    boolean temGolpeCritico() {
+
+<span class="fc" id="L119">        SecureRandom secureRandom = new SecureRandom();</span>
+        //gera um numero de 1 a 100
+<span class="fc" id="L121">        int randomico = secureRandom.nextInt(100)+1 ;</span>
+
+        //se for um numero &lt;= 10 tem golpe critico
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (randomico&lt;=10){</span>
+            // Golpe Crítico
+<span class="nc" id="L126">            return true;</span>
+        }else {
+            // Sem Golpe Crítico
+<span class="fc" id="L129">            return false;</span>
+        }
+
+    }
+
+     int calcularDanoFinal(int danoBaseDoAtacante, boolean temDanoCritico, Personagem quemDefende) {
+
+<span class="fc" id="L136">        int danoFinal = danoBaseDoAtacante - quemDefende.getDefesa();</span>
+
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (temDanoCritico){</span>
+            // aplicando o multiplicador do golpe critico
+            // usei 3/2 inves de 1.5 para manter a
+            // assinatura de int ao inves de double
+
+<span class="fc" id="L143">            danoFinal = danoFinal*3/2;</span>
+
+        }
+
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (danoFinal &lt;= 1) {</span>
+<span class="nc" id="L148">            danoFinal=1;</span>
+<span class="nc" id="L149">            return danoFinal;</span>
+        }else{
+<span class="fc" id="L151">            return danoFinal;</span>
+        }
+
+    }
+
+     void removerHP(int danoFinal, Personagem quemDefende) {
+        //calcula o HP pós ataque e salva no Defensor
+<span class="fc" id="L158">        int vidaRestante = quemDefende.getVida() - danoFinal;</span>
+<span class="fc" id="L159">        quemDefende.setVida(vidaRestante);</span>
+
+<span class="fc" id="L161">    }</span>
+
+    boolean temVencedor(Personagem P1, Personagem P2 ) {
+<span class="pc bpc" id="L164" title="1 of 4 branches missed.">        if (P1.getVida() &gt; 0  &amp;&amp;  P2.getVida() &gt; 0) {</span>
+            // A batalha continua
+<span class="fc" id="L166">            return false;</span>
+<span class="pc bpc" id="L167" title="2 of 4 branches missed.">        } else if (P1.getVida() &gt; 0  &amp;&amp;  P2.getVida() &lt;= 0) {</span>
+            // A batalha acabou
+            // Personagem 1 venceu
+<span class="fc" id="L170">            return true;</span>
+
+        }else{
+            // if(P1.getVida() &lt;= 0  &amp;&amp;  P2.getVida() &gt; 0)
+            // A batalha acabou
+            // Personagem 2 venceu
+<span class="nc" id="L176">            return true;</span>
+
+        }
+
+
+    }
+
+     void quemVenceu(Personagem p1, Personagem p2) {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (p2.getVida()&lt;=0){</span>
+            //PERSONAGEM 1 VENCEU
+<span class="nc" id="L186">            System.out.println(&quot;O vencedor do confronto foi: &quot;+ p1);</span>
+
+        }else{
+            //PERSONAGEM 2 VENCEU
+<span class="nc" id="L190">            System.out.println(&quot;O vencedor do confronto foi: &quot;+ p2);</span>
+        }
+<span class="nc" id="L192">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
