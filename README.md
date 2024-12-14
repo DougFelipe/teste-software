@@ -51,7 +51,7 @@ O jogo segue uma mecânica baseada em atributos como **Ataque**, **Defesa**, **V
 
 ## Como Gerar o Relatório de Cobertura
 
-1. Certifique-se de ter o plugin de cobertura configurado no arquivo `pom.xml` (por exemplo, o **JaCoCo**).
+1. Plugin de cobertura configurado no arquivo `pom.xml` utilizando o **JaCoCo**).
 2. Gere o relatório de cobertura com o seguinte comando:  
    ```  
    mvn jacoco:report  
