@@ -107,22 +107,14 @@ public class Batalha {
     }
 
 
-     int calcularDanoBase(Personagem quemAtaca, int variacaoDeDano) {
-        //SecureRandom secureRandom = new SecureRandom();
-        // gera um inteiro de 0 a 4 e adiciona a variação
-        // ao 0.8 do multiplicador
-        //int randomico = secureRandom.nextInt(5);
-
-        double multiplicador = 0.8 + (variacaoDeDano * 0.1);
-        double dano = multiplicador * quemAtaca.getAtaque();
-        int danoBase = (int) Math.round(dano);
-        int multINT = (int) Math.round(multiplicador);
-
-        return danoBase;
-
+    //refatorado para simplificação
+    int calcularDanoBase(Personagem quemAtaca, int variacaoDeDano) {
+        double multiplicador = 0.8 + (variacaoDeDano * 0.1); // Variação de 0 a 0.4
+        return (int) Math.round(quemAtaca.getAtaque() * multiplicador);
     }
 
-     boolean temGolpeCritico() {
+
+    boolean temGolpeCritico() {
 
         SecureRandom secureRandom = new SecureRandom();
         //gera um numero de 1 a 100
