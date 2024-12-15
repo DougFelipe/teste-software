@@ -1,9 +1,15 @@
 package batalha;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 
 import org.junit.jupiter.api.Test;
 
@@ -298,5 +304,107 @@ class PersonagemTest {
 
 		assertFalse(p.checarEAssasino());
 	}
+
+	@ParameterizedTest(name = "Guerreiro próximo ao limite com Ataque {0} e Resistência {1}")
+	@CsvSource({
+			"6, 6, 4, 4", // Válido
+			"7, 6, 4, 3", // Válido
+			"5, 5, 6, 4"  // Inválido
+	})
+	void testeLimitesGuerreiro(int ataque, int resistencia, int defesa, int velocidade) {
+		Personagem guerreiro = new Guerreiro();
+		guerreiro.setAtaque(ataque);
+		guerreiro.setResistencia(resistencia);
+		guerreiro.setDefesa(defesa);
+		guerreiro.setVelocidade(velocidade);
+
+		if (guerreiro.checarEGuerreiro()) {
+			assertDoesNotThrow(guerreiro::checarRegraDeClasse, "Os atributos devem ser válidos para um Guerreiro.");
+		} else {
+			assertThrows(IllegalStateException.class, guerreiro::checarRegraDeClasse, "Os atributos não devem ser válidos.");
+		}
+	}
+
+	@ParameterizedTest(name = "Assassino inválido com Ataque {0}, Velocidade {1}, Defesa {2}, Resistência {3}")
+	@CsvSource({
+			"7, 7, 8, 3", // Defesa maior que Velocidade (Inválido)
+			"7, 7, 3, 8", // Resistência maior que Velocidade (Inválido)
+			"6, 5, 6, 4"  // Defesa igual a Ataque, mas maior que Velocidade (Inválido)
+	})
+	void testeLimitesAssassino(int ataque, int velocidade, int defesa, int resistencia) {
+		Personagem assassino = new Assassino();
+		assassino.setAtaque(ataque);
+		assassino.setVelocidade(velocidade);
+		assassino.setDefesa(defesa);
+		assassino.setResistencia(resistencia);
+
+		// Verifica que as regras da classe lançam exceção para cenários inválidos
+		assertThrows(IllegalStateException.class, assassino::checarRegraDeClasse,
+				"Os atributos não devem ser válidos para a classe Assassino.");
+	}
+
+	@ParameterizedTest(name = "Guerreiro com Ataque {0} e Resistência {1} válidos")
+	@CsvSource({
+			"7, 7, 3, 3",
+			"6, 6, 4, 4",
+			"8, 8, 2, 2"
+	})
+	void testeEmpatesGuerreiro(int ataque, int resistencia, int defesa, int velocidade) {
+		Personagem guerreiro = new Guerreiro();
+		guerreiro.setAtaque(ataque);
+		guerreiro.setResistencia(resistencia);
+		guerreiro.setDefesa(defesa);
+		guerreiro.setVelocidade(velocidade);
+		assertTrue(guerreiro.checarEGuerreiro(), "Os atributos devem ser válidos para um Guerreiro.");
+	}
+
+	@ParameterizedTest(name = "Assassino válido com Ataque={0}, Velocidade={1}, Defesa={2}, Resistência={3}")
+	@CsvSource({
+			"7, 7, 3, 3", // Ataque e Velocidade empatados, secundários menores
+			"8, 7, 3, 2", // Ataque maior que Velocidade
+			"7, 8, 2, 3", // Velocidade maior que Ataque
+			"6, 6, 4, 4"  // Empate nos principais, secundários válidos
+	})
+	void testeEmpatesAssassino(int ataque, int velocidade, int defesa, int resistencia) {
+		Personagem assassino = new Assassino();
+		assassino.setAtaque(ataque);
+		assassino.setVelocidade(velocidade);
+		assassino.setDefesa(defesa);
+		assassino.setResistencia(resistencia);
+
+		assertDoesNotThrow(assassino::checarRegraDeClasse, "Os atributos devem ser válidos para um Assassino.");
+	}
+
+
+	@ParameterizedTest(name = "Guerreiro inválido com Defesa {2} ou Velocidade {3} maior que Ataque/Resistência")
+	@CsvSource({
+			"7, 7, 8, 3", // Defesa maior que Resistência
+			"7, 7, 3, 8"  // Velocidade maior que Resistência
+	})
+	void testeGuerreiroSecundarios(int ataque, int resistencia, int defesa, int velocidade) {
+		Personagem guerreiro = new Guerreiro();
+		guerreiro.setAtaque(ataque);
+		guerreiro.setResistencia(resistencia);
+		guerreiro.setDefesa(defesa);
+		guerreiro.setVelocidade(velocidade);
+
+		assertThrows(IllegalStateException.class, guerreiro::checarRegraDeClasse, "Os atributos secundários não podem ultrapassar os principais para um Guerreiro.");
+	}
+
+	@ParameterizedTest(name = "Assassino inválido com Defesa {2} ou Resistência {3} maior que Ataque/Velocidade")
+	@CsvSource({
+			"7, 7, 8, 3", // Defesa maior que Velocidade
+			"7, 7, 3, 8"  // Resistência maior que Velocidade
+	})
+	void testeAssassinoSecundarios(int ataque, int velocidade, int defesa, int resistencia) {
+		Personagem assassino = new Assassino();
+		assassino.setAtaque(ataque);
+		assassino.setVelocidade(velocidade);
+		assassino.setDefesa(defesa);
+		assassino.setResistencia(resistencia);
+
+		assertThrows(IllegalStateException.class, assassino::checarRegraDeClasse, "Os atributos secundários não podem ultrapassar os principais para um Assassino.");
+	}
+
 
 }
