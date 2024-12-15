@@ -1,6 +1,8 @@
 package batalha;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -172,6 +174,129 @@ class PersonagemTest {
 		p.setVelocidade(3);
 
 		assertThrows(IllegalStateException.class, p::checarRegraDeClasse);
+	}
+
+	@Test
+	void testeChecarRegraDeClasseGuerreiro2(){
+		Personagem p = new Guerreiro();
+
+		p.setAtaque(5);
+		p.setResistencia(7);
+		p.setDefesa(3);
+		p.setVelocidade(5);
+
+		assertFalse(p.checarEGuerreiro());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseGuerreiro3(){
+		Personagem p = new Guerreiro();
+
+		p.setAtaque(7);
+		p.setResistencia(5);
+		p.setDefesa(5);
+		p.setVelocidade(3);
+
+		assertFalse(p.checarEGuerreiro());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseGuerreiro4(){
+		Personagem p = new Guerreiro();
+
+		p.setAtaque(7);
+		p.setResistencia(5);
+		p.setVelocidade(5);
+		p.setDefesa(3);
+
+		assertFalse(p.checarEGuerreiro());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseGuerreiro5(){
+		Personagem p = new Guerreiro();
+
+		p.setAtaque(5);
+		p.setResistencia(5);
+		p.setDefesa(6);
+		p.setVelocidade(4);
+
+		assertFalse(p.checarEGuerreiro());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseGuerreiro6(){
+		
+		Personagem p = new Guerreiro();
+
+		p.setAtaque(5);
+		p.setResistencia(5);
+		p.setVelocidade(6);
+		p.setDefesa(4);
+
+		assertFalse(p.checarEGuerreiro());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseAssassino2(){
+		Personagem p = new Assassino();
+
+		p.setAtaque(6);
+		p.setVelocidade(5);
+		p.setResistencia(6);
+		p.setDefesa(3);
+
+		assertFalse(p.checarEAssasino());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseAssassino3(){
+		Personagem p = new Assassino();
+
+		p.setAtaque(5);
+		p.setVelocidade(5);
+		p.setDefesa(6);
+		p.setResistencia(4);
+
+		assertFalse(p.checarEAssasino());
+
+	}
+
+	@Test
+	void testeChecarRegraDeClasseAssassino4(){
+		Personagem p = new Assassino();
+
+		p.setAtaque(5);
+		p.setVelocidade(5);
+		p.setResistencia(6);
+		p.setDefesa(4);
+
+		assertFalse(p.checarEAssasino());
+	}
+
+	@Test
+	void testeChecarRegraDeClasseAssassino5(){
+		Personagem p = new Assassino();
+
+		p.setVelocidade(6);
+		p.setAtaque(5);
+		p.setDefesa(6);
+		p.setResistencia(3);
+
+		assertFalse(p.checarEAssasino());
+
+	}
+
+	@Test
+	void testeChecarRegraDeClasseAssassino6(){
+		Personagem p = new Assassino();
+
+		p.setVelocidade(6);
+		p.setAtaque(5);
+		p.setResistencia(6);
+		p.setDefesa(3);
+
+		assertFalse(p.checarEAssasino());
 	}
 
 }
