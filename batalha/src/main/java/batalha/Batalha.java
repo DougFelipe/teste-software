@@ -153,12 +153,12 @@ public class Batalha {
 
     }
 
-     void removerHP(int danoFinal, Personagem quemDefende) {
-        //calcula o HP pós ataque e salva no Defensor
-        int vidaRestante = quemDefende.getVida() - danoFinal;
+    void removerHP(int danoFinal, Personagem quemDefende) {
+        // Garante que o HP restante nunca seja menor que zero
+        int vidaRestante = Math.max(quemDefende.getVida() - danoFinal, 0);
         quemDefende.setVida(vidaRestante);
-
     }
+
 
     boolean temVencedor(Personagem P1, Personagem P2 ) {
         if (P1.getVida() > 0  &&  P2.getVida() > 0) {

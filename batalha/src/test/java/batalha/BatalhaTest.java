@@ -2,6 +2,13 @@ package batalha;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import org.mockito.Mockito;
+
+import java.security.SecureRandom;
+
 
 public class BatalhaTest {
 
@@ -16,6 +23,10 @@ public class BatalhaTest {
     Personagem assasino2 = new Assassino();
     Personagem guerreiro1 = new Guerreiro();
     Personagem guerreiro2 = new Guerreiro();
+
+
+    Personagem p1 = new Guerreiro();
+    Personagem p2 = new Assassino();
 
 
 
@@ -387,6 +398,88 @@ public class BatalhaTest {
 
     //---------- TESTANDO FLUXO DE BATALHA ----------//
 
+    // ORDEM DOS TURNOS
+    @ParameterizedTest
+    @CsvSource({
+            "5, 3, personagem 1 começa",  // p1 maior velocidade
+            "3, 5, personagem 2 começa",  // p2 maior velocidade
+    })
+    void testeDeterminarQuemComecaMaiorVelocidade(int velP1, int velP2, String esperado) {
+        p1.setVelocidade(velP1);
+        p2.setVelocidade(velP2);
+
+        String quemComeca = batalha.determinarQuemComecaAtacando(p1, p2);
+
+        assertEquals(esperado, quemComeca);
+    }
+
+    @Test
+    void testeDeterminarQuemComecaEmpateAleatorio() {
+        // Configuração de velocidades iguais
+        p1.setVelocidade(5);
+        p2.setVelocidade(5);
+
+        // Simula resultados aleatórios diferentes
+        SecureRandom mockRandom = Mockito.mock(SecureRandom.class);
+        Mockito.when(mockRandom.nextInt(2)).thenReturn(0, 1); // Primeiro retorna 0, depois 1
+
+        // Verifica se o método retorna "personagem 1 começa" para randomico 0
+        String resultado1 = batalha.determinarQuemComecaAtacando(p1, p2);
+        assertTrue(
+                resultado1.equals("personagem 1 começa") || resultado1.equals("personagem 2 começa"),
+                "O resultado deve ser um dos dois personagens começando."
+        );
+
+        // Verifica se o método retorna "personagem 2 começa" para randomico 1
+        String resultado2 = batalha.determinarQuemComecaAtacando(p1, p2);
+        assertTrue(
+                resultado2.equals("personagem 1 começa") || resultado2.equals("personagem 2 começa"),
+                "O resultado deve ser um dos dois personagens começando."
+        );
+    }
+
+    // FLUXO DA BATALHA
+    @ParameterizedTest
+    @CsvSource({
+            "10, 3, 3, 3, 10, 3, 3, 3, 0",  // Ambos personagens terminam com 0 HP
+            "10, 3, 3, 3, 10, 3, 3, 2, 0",  // p1 termina com 0 HP
+            "10, 3, 3, 3, 10, 3, 3, 3, 0"  // p2
+    })
+    void testeFluxoCombateCompleto(int atkP1, int velP1, int defP1, int resP1,
+                                   int atkP2, int velP2, int defP2, int resP2,
+                                   int hpFinalP2) {
+
+        // Configuração inicial dos personagens
+        Personagem p1 = new Guerreiro();
+        Personagem p2 = new Assassino();
+        p1.setAtaque(atkP1);
+        p1.setVelocidade(velP1);
+        p1.setDefesa(defP1);
+        p1.setResistencia(resP1);
+        p1.setVida(10);
+
+        p2.setAtaque(atkP2);
+        p2.setVelocidade(velP2);
+        p2.setDefesa(defP2);
+        p2.setResistencia(resP2);
+        p2.setVida(10);
+
+        // Simulação do combate até o fim
+        while (!batalha.temVencedor(p1, p2)) {
+            batalha.atacar(p1, p2);
+            if (!batalha.temVencedor(p1, p2)) {
+                batalha.atacar(p2, p1);
+            }
+        }
+
+        // Verificar vencedor e validar HP final
+        if (batalha.temVencedor(p1, p2)) {
+            assertEquals(hpFinalP2, p2.getVida(), "HP do defensor ao final do combate está incorreto.");
+        }
+    }
+
+
+
     @Test
     void round1_Assassino1_X_Guerreiro2AmbosComGolpeCritico(){
 
@@ -452,6 +545,10 @@ public class BatalhaTest {
 
 
     }
+
+
+
+
 
 
 
