@@ -15,6 +15,53 @@ import org.junit.jupiter.api.Test;
 
 class PersonagemTest {
 
+	// --- TESTE DE CONSTRUTOR ---//
+
+	@Test
+	void checarConstrutorAssassinoVazioEParametrizado(){
+
+		//Assassino inicializadp pelo construtor vazio
+		Assassino ass1 = new Assassino();
+		ass1.setAtaque(7);
+		ass1.setVelocidade(7);
+		ass1.setDefesa(3);
+		ass1.setResistencia(3);
+
+		//Assassino inicializado pelo construtor preenchido
+		Assassino ass2 = new Assassino(7,3,7,3);
+
+		//checa se os atributos correspondem entre si
+		assertEquals(ass1.getAtaque(), ass2.getAtaque());
+		assertEquals(ass1.getDefesa(), ass2.getDefesa());
+		assertEquals(ass1.getVelocidade(), ass2.getVelocidade());
+		assertEquals(ass1.getResistencia(), ass2.getResistencia());
+
+
+	}
+	@Test
+	void checarConstrutorGuerreiroVazioEParametrizado(){
+
+		//Guerreiro inicializadp pelo construtor vazio
+		Guerreiro gue1 = new Guerreiro();
+		gue1.setAtaque(7);
+		gue1.setVelocidade(3);
+		gue1.setDefesa(3);
+		gue1.setResistencia(7);
+
+		//Assassino inicializado pelo construtor preenchido
+		Guerreiro gue2 = new Guerreiro(7,3,3,7);
+
+		//checa se os atributos correspondem entre si
+		assertEquals(gue1.getAtaque(), gue2.getAtaque());
+		assertEquals(gue1.getDefesa(), gue2.getDefesa());
+		assertEquals(gue1.getVelocidade(), gue2.getVelocidade());
+		assertEquals(gue1.getResistencia(), gue2.getResistencia());
+
+	}
+
+
+
+	// --- TESTE DE CHECAR TOTAL ---//
 	@Test
 	void testeChecarTotalIgualA20_NaoLancaExcecao() {
 		Personagem p = new Personagem() {
@@ -65,6 +112,9 @@ class PersonagemTest {
 
 		assertThrows(IllegalStateException.class, () -> p.checarTotal());
 	}
+
+
+	// --- TESTE DE MINIMO ---//
 
 	@Test
 	void testeChecarMinimoIgualA2_LancaExcecao() {
@@ -120,6 +170,7 @@ class PersonagemTest {
 	}
 
 
+	// --- TESTE DE REGRA DE CLASSE ---//
 
 	@Test
 	void testeChecarRegraDeClasseGuerreiroValido(){
@@ -361,8 +412,8 @@ class PersonagemTest {
 	@ParameterizedTest(name = "Assassino válido com Ataque={0}, Velocidade={1}, Defesa={2}, Resistência={3}")
 	@CsvSource({
 			"7, 7, 3, 3", // Ataque e Velocidade empatados, secundários menores
-			"8, 7, 3, 2", // Ataque maior que Velocidade
-			"7, 8, 2, 3", // Velocidade maior que Ataque
+			"7, 6, 4, 3", // Ataque maior que Velocidade
+			"5, 7, 4, 4", // Velocidade maior que Ataque
 			"6, 6, 4, 4"  // Empate nos principais, secundários válidos
 	})
 	void testeEmpatesAssassino(int ataque, int velocidade, int defesa, int resistencia) {

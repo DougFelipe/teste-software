@@ -1,5 +1,6 @@
 package batalha;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,8 +39,10 @@ public class BatalhaTest {
 
         //Propositalmente este é um teste que tem comportamento aleatorio
         boolean checadorDeGolpeCritico = batalha.temGolpeCritico();
-        // assertFalse(checadorDeGolpeCritico);
+         assertFalse(checadorDeGolpeCritico);
     }
+
+
 
 
     //---------- TESTES DE DANO BASE ----------//
@@ -395,6 +398,53 @@ public class BatalhaTest {
 
     }
 
+    @Test
+    void checarP1VenceuABatalha(){
+        assasino1.setVida(10);
+        assasino2.setVida(0);
+
+        //é esperado que o Assassino1 seja declarado o vencedor
+        assertEquals("O vencedor do confronto foi: "+ assasino1, batalha.quemVenceu(assasino1,assasino2) );
+
+    }
+    @Test
+    void checarP2VenceuABatalha(){
+        assasino1.setVida(0);
+        assasino2.setVida(10);
+
+        //é esperado que o Assassino2 seja declarado o vencedor
+        assertEquals("O vencedor do confronto foi: "+ assasino2, batalha.quemVenceu(assasino1,assasino2) );
+
+    }
+
+    @Test
+    void checarTemvencedorP1(){
+        assasino1.setVida(10);
+        assasino2.setVida(0);
+
+        boolean verificador = batalha.temVencedor(assasino1,assasino2);
+
+        assertTrue(verificador);
+    }
+    @Test
+    void checarTemvencedorP2(){
+        assasino1.setVida(0);
+        assasino2.setVida(10);
+
+        boolean verificador = batalha.temVencedor(assasino1,assasino2);
+
+        assertTrue(verificador);
+    }
+    @Test
+    void checarNaoTemvencedor(){
+        assasino1.setVida(10);
+        assasino2.setVida(10);
+
+        boolean verificador = batalha.temVencedor(assasino1,assasino2);
+
+        assertFalse(verificador);
+    }
+
 
     //---------- TESTANDO FLUXO DE BATALHA ----------//
 
@@ -479,6 +529,32 @@ public class BatalhaTest {
     }
 
 
+    @Test
+    void ataqueEsquivado(){
+
+        // INICIALIZAÇÃO DE ATRIBUTOS
+        // vamos considerar um assassino com
+        // alto nivel de xp e extramamente veloz
+
+        guerreiro2.setAtaque(7);
+        guerreiro2.setResistencia(7);
+        guerreiro2.setDefesa(3);
+        guerreiro2.setVelocidade(3);
+
+        assasino1.setAtaque(10);
+        assasino1.setDefesa(3);
+        assasino1.setVelocidade(25);
+        assasino1.setResistencia(3);
+        int vidaInicialAssassino = 100;
+        assasino1.setVida(vidaInicialAssassino);
+
+        // o HP do assassino deve ser o igual a 100 caso ele se evada
+        batalha.atacar(guerreiro2,assasino1);
+        assertEquals(vidaInicialAssassino, assasino1.getVida());
+
+
+    }
+
 
     @Test
     void round1_Assassino1_X_Guerreiro2AmbosComGolpeCritico(){
@@ -490,7 +566,7 @@ public class BatalhaTest {
         assasino1.setResistencia(3);
 
         guerreiro2.setAtaque(7);
-        guerreiro2.setAtaque(7);
+        guerreiro2.setResistencia(7);
         guerreiro2.setDefesa(3);
         guerreiro2.setVelocidade(3);
 
@@ -509,6 +585,7 @@ public class BatalhaTest {
         String guerreiroComeca= "personagem 2 começa";
         String quemComeca = batalha.determinarQuemComecaAtacando(assasino1,guerreiro2);
         assertEquals(quemComeca,assassinoComeca );
+        assertNotEquals(quemComeca,guerreiroComeca);
 
         //ASSASSINO ATACANDO
         //dano: 6
@@ -542,6 +619,61 @@ public class BatalhaTest {
 //        String AssassinoVenceu = "O vencedor do confronto foi: "+assasino1;
 //        String GuerreiroVenceu = "O vencedor do confronto foi: "+guerreiro2;
 
+
+
+    }
+
+
+    @Test
+    void ataqueComDanoFinalIgualA1(){
+
+        //DANO FINAL DEVE SER 1
+
+        // INICIALIZAÇÃO DE ATRIBUTOS
+        assasino1.setAtaque(6);
+        assasino1.setDefesa(4);
+        assasino1.setVelocidade(6);
+        assasino1.setResistencia(4);
+
+        guerreiro2.setAtaque(6);
+        guerreiro2.setResistencia(6);
+        guerreiro2.setDefesa(5);
+        guerreiro2.setVelocidade(3);
+
+        // ataque base esperado 6
+        int danoBase = batalha.calcularDanoBase(assasino1,2);
+
+        // (6 - 5) = 1
+        int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, guerreiro2);
+
+        assertEquals(1, danoInfrigido);
+
+
+    }
+    @Test
+    void ataqueComDanoFinalIgualA0(){
+
+        //DANO FINAL DEVE SER 0
+
+        // INICIALIZAÇÃO DE ATRIBUTOS
+        assasino1.setAtaque(6);
+        assasino1.setDefesa(4);
+        assasino1.setVelocidade(6);
+        assasino1.setResistencia(4);
+
+        //considere um guerreiro evoluido com atributos somando mais de 20
+        guerreiro2.setAtaque(8);
+        guerreiro2.setResistencia(8);
+        guerreiro2.setDefesa(6);
+        guerreiro2.setVelocidade(6);
+
+        // ataque base esperado 6
+        int danoBase = batalha.calcularDanoBase(assasino1,2);
+
+        // (6 - 6) = 0 --- Porem o dano minimo será = 1
+        int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, guerreiro2);
+
+        assertEquals(1, danoInfrigido);
 
 
     }

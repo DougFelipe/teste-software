@@ -12,8 +12,8 @@ public class Batalha {
         if (personagem1.getVelocidade().equals(personagem2.getVelocidade())) {
             //escolhe aleatoriamente
             SecureRandom secureRandom = new SecureRandom();
-            int randomico = secureRandom.nextInt(2) + 1;
-            if (randomico==1){
+            int randomico = secureRandom.nextInt(2);
+            if (randomico==0){
                 //personagem 1 começa
                 return "personagem 1 começa";
             }else{
@@ -33,6 +33,7 @@ public class Batalha {
         }
 
     }
+   
 
     boolean verificarEvasao(Personagem atacante, Personagem defensor, int randomico) {
         //        REGRAS PARA EVASÃO (EVITAR GOLPES)
@@ -180,14 +181,14 @@ public class Batalha {
 
     }
 
-     void quemVenceu(Personagem p1, Personagem p2) {
+     String quemVenceu(Personagem p1, Personagem p2) {
         if (p2.getVida()<=0){
             //PERSONAGEM 1 VENCEU
-            System.out.println("O vencedor do confronto foi: "+ p1);
+            return("O vencedor do confronto foi: "+ p1);
 
         }else{
             //PERSONAGEM 2 VENCEU
-            System.out.println("O vencedor do confronto foi: "+ p2);
+            return("O vencedor do confronto foi: "+ p2);
         }
     }
 

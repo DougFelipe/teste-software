@@ -20,14 +20,9 @@ public class Guerreiro extends Personagem {
 		int resistencia = this.getResistencia();
 		int ataque = this.getAtaque();
 		int defesa = this.getDefesa();
+		checarEGuerreiro();
 
-		if(		(resistencia > ataque && ataque > defesa && defesa > velocidade) ||
-				(resistencia > ataque && ataque > velocidade && velocidade > defesa) ||
-				(ataque > resistencia && resistencia > defesa && defesa > velocidade) ||
-				(ataque > resistencia && resistencia > velocidade && velocidade > defesa) ||
-				(ataque == resistencia && resistencia > velocidade && velocidade > defesa) ||
-				(ataque == resistencia && resistencia > defesa && defesa > velocidade) ||
-				(ataque == resistencia && resistencia > defesa && defesa == velocidade)){
+		if(	checarEGuerreiro() ){
 			//é guerreiro
 
 		}else{

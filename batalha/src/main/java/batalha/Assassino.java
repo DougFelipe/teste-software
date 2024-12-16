@@ -20,14 +20,7 @@ public class Assassino extends Personagem {
 		int ataque = this.getAtaque();
 		int defesa = this.getDefesa();
 
-		if(		(ataque > velocidade && velocidade > defesa && defesa > resistencia) ||
-				(ataque > velocidade && velocidade > resistencia && resistencia > defesa) ||
-				(ataque == velocidade && velocidade > defesa && defesa > resistencia) ||
-				(ataque == velocidade && velocidade > resistencia && resistencia > defesa) ||
-				(velocidade > ataque && ataque > defesa && defesa > resistencia) ||
-				(velocidade==ataque && ataque > defesa && defesa == resistencia )||
-				(velocidade > ataque && ataque > resistencia && resistencia > defesa)
-		){
+		if( checarEAssasino()){
 			//é Assassino
 
 		}else{

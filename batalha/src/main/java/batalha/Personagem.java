@@ -15,7 +15,7 @@ public abstract class Personagem {
 		this.vida = 100;
 	}
 
-	public Personagem(Integer ataque, Integer defesa, Integer resistencia, Integer velocidade) {
+	public Personagem(Integer ataque, Integer defesa, Integer velocidade ,Integer resistencia) {
 		this.ataque = ataque;
 		this.defesa = defesa;
 		this.resistencia = resistencia;
@@ -42,11 +42,13 @@ public abstract class Personagem {
 		int defesa = this.getDefesa();
 
 		if (
-				(ataque > velocidade && velocidade > defesa && defesa > resistencia) ||
+						(ataque > velocidade && velocidade > defesa && defesa > resistencia) ||
 						(ataque > velocidade && velocidade > resistencia && resistencia > defesa) ||
 						(ataque == velocidade && velocidade > defesa && defesa > resistencia) ||
 						(ataque == velocidade && velocidade > resistencia && resistencia > defesa) ||
+						(ataque == velocidade && velocidade > resistencia && resistencia == defesa) ||
 						(velocidade > ataque && ataque > defesa && defesa > resistencia) ||
+						(velocidade > ataque && ataque > defesa && defesa == resistencia) ||
 						(velocidade > ataque && ataque > resistencia && resistencia > defesa)
 		) {
 			//É assasino
