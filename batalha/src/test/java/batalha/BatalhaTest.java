@@ -343,5 +343,9 @@ public class BatalhaTest {
         int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, guerreiro2);
         assertEquals(esperadoDanoFinal, danoInfrigido);
     }
-    
+
+    /**MC/DC Teste**/
+
+
+
 }

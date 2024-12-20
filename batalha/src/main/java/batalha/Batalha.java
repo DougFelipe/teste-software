@@ -52,14 +52,14 @@ public class Batalha {
     /**
      * Realiza o ataque de um personagem contra outro.
      *
-     * <p>O método realiza várias etapas:
-     * <ul>
-     *     <li>Gera um número aleatório e verifica evasão.</li>
-     *     <li>Calcula o dano base do ataque.</li>
-     *     <li>Determina se o ataque é crítico.</li>
-     *     <li>Calcula o dano final e aplica ao HP do defensor.</li>
-     * </ul>
-     * </p>
+     * O método realiza várias etapas:
+     *
+     *     Gera um número aleatório e verifica evasão.
+     *     Calcula o dano base do ataque.
+     *     Determina se o ataque é crítico.
+     *     Calcula o dano final e aplica ao HP do defensor.
+     *
+     *
      *
      * @param quemAtaca o personagem que está realizando o ataque.
      * @param quemDefende o personagem que está se defendendo.
@@ -95,7 +95,7 @@ public class Batalha {
     /**
      * Determina se o ataque tem golpe crítico.
      *
-     * <p>Golpes críticos têm uma chance de 10% de ocorrer.</p>
+     * Golpes críticos têm uma chance de 10% de ocorrer.
      *
      * @return {@code true} se o ataque for crítico, {@code false} caso contrário.
      */
@@ -155,4 +155,7 @@ public class Batalha {
         return p2.getVida() <= 0 ? "O vencedor do confronto foi: Personagem 1"
                 : "O vencedor do confronto foi: Personagem 2";
     }
+
+
+
 }
