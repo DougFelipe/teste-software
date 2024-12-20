@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="batalha.PersonagemTest" time="0.164" tests="37" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="batalha.PersonagemTest" time="0.215" tests="39" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="BR"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\duda_\AppData\Local\Temp\surefire10629852059791290238\surefirebooter-20241215205032555_3.jar C:\Users\duda_\AppData\Local\Temp\surefire10629852059791290238 2024-12-15T20-50-32_362-jvmRun1 surefire-20241215205032555_1tmp surefire_0-20241215205032555_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\duda_\AppData\Local\Temp\surefire15918363709493343972\surefirebooter-20241219222119984_3.jar C:\Users\duda_\AppData\Local\Temp\surefire15918363709493343972 2024-12-19T22-21-19_709-jvmRun1 surefire-20241219222119984_1tmp surefire_0-20241219222119984_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="D:\Tecnologia da Informação (TI)\P6 2024.2\TESTE DE SOFTWARE I\Projeto\batalha\target\test-classes;D:\Tecnologia da Informação (TI)\P6 2024.2\TESTE DE SOFTWARE I\Projeto\batalha\target\classes;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-suite\1.11.0-M2\junit-platform-suite-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-suite-api\1.11.0-M2\junit-platform-suite-api-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-commons\1.11.0-M2\junit-platform-commons-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-suite-engine\1.11.0-M2\junit-platform-suite-engine-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-engine\1.11.0-M2\junit-platform-engine-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-suite-commons\1.11.0-M2\junit-platform-suite-commons-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\platform\junit-platform-launcher\1.11.0-M2\junit-platform-launcher-1.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\junit\jupiter\junit-jupiter-migrationsupport\5.11.0-M2\junit-jupiter-migrationsupport-5.11.0-M2.jar;C:\Users\duda_\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\duda_\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\duda_\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.0-M2\junit-jupiter-api-5.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\duda_\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\duda_\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.11.0-M2\junit-jupiter-params-5.11.0-M2.jar;C:\Users\duda_\.m2\repository\org\mockito\mockito-core\5.5.0\mockito-core-5.5.0.jar;C:\Users\duda_\.m2\repository\net\bytebuddy\byte-buddy\1.14.6\byte-buddy-1.14.6.jar;C:\Users\duda_\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.6\byte-buddy-agent-1.14.6.jar;C:\Users\duda_\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\duda_\AppData\Local\Temp\surefire10629852059791290238\surefirebooter-20241215205032555_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\duda_\AppData\Local\Temp\surefire15918363709493343972\surefirebooter-20241219222119984_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
@@ -58,41 +58,43 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testeChecarRegraDeClasseAssassino2" classname="batalha.PersonagemTest" time="0.007"/>
-  <testcase name="testeChecarRegraDeClasseAssassino3" classname="batalha.PersonagemTest" time="0.003"/>
-  <testcase name="testeChecarRegraDeClasseAssassino4" classname="batalha.PersonagemTest" time="0"/>
-  <testcase name="testeChecarRegraDeClasseAssassino5" classname="batalha.PersonagemTest" time="0.002"/>
-  <testcase name="testeChecarRegraDeClasseAssassino6" classname="batalha.PersonagemTest" time="0.007"/>
-  <testcase name="testeChecarRegraDeClasseAssassinoLancaExcecao" classname="batalha.PersonagemTest" time="0.005"/>
-  <testcase name="testeAssassinoSecundarios(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.015"/>
-  <testcase name="testeAssassinoSecundarios(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeChecarTotalIgualA21_LancaExcecao" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeChecarMinimoIgualA3_NaoLancaExcecao" classname="batalha.PersonagemTest" time="0.003"/>
-  <testcase name="testeEmpatesGuerreiro(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.002"/>
-  <testcase name="testeEmpatesGuerreiro(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.003"/>
-  <testcase name="testeEmpatesGuerreiro(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeLimitesAssassino(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.002"/>
-  <testcase name="testeLimitesAssassino(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeLimitesAssassino(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.004"/>
-  <testcase name="testeChecarTotalIgualA20_NaoLancaExcecao" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeChecarMinimoIgualA2_LancaExcecao" classname="batalha.PersonagemTest" time="0.005"/>
-  <testcase name="testeChecarMinimoIgualA4_NaoLancaExcecao" classname="batalha.PersonagemTest" time="0.003"/>
+  <testcase name="testeChecarRegraDeClasseAssassino2" classname="batalha.PersonagemTest" time="0.008"/>
+  <testcase name="testeChecarRegraDeClasseAssassino3" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeChecarRegraDeClasseAssassino4" classname="batalha.PersonagemTest" time="0.003"/>
+  <testcase name="testeChecarRegraDeClasseAssassino5" classname="batalha.PersonagemTest" time="0.003"/>
+  <testcase name="testeChecarRegraDeClasseAssassino6" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeChecarRegraDeClasseAssassinoLancaExcecao" classname="batalha.PersonagemTest" time="0.006"/>
+  <testcase name="testeAssassinoSecundarios(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.007"/>
+  <testcase name="testeAssassinoSecundarios(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.002"/>
+  <testcase name="testeEmpatesGuerreiro(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.007"/>
+  <testcase name="testeEmpatesGuerreiro(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.004"/>
+  <testcase name="testeEmpatesGuerreiro(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.004"/>
+  <testcase name="testeLimitesAssassino(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.004"/>
+  <testcase name="testeLimitesAssassino(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.003"/>
+  <testcase name="testeLimitesAssassino(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.005"/>
+  <testcase name="testeChecarTotal(int, int, int, int, boolean)[1]" classname="batalha.PersonagemTest" time="0.009"/>
+  <testcase name="testeChecarTotal(int, int, int, int, boolean)[2]" classname="batalha.PersonagemTest" time="0.005"/>
+  <testcase name="testeChecarTotal(int, int, int, int, boolean)[3]" classname="batalha.PersonagemTest" time="0.002"/>
+  <testcase name="checarConstrutoresVazioEParametrizado(String, int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.004"/>
+  <testcase name="checarConstrutoresVazioEParametrizado(String, int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.004"/>
   <testcase name="testeChecarRegraDeClasseAssassinoValido" classname="batalha.PersonagemTest" time="0.001"/>
   <testcase name="testeChecarRegraDeClasseGuerreiroValido" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeGuerreiroSecundarios(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.003"/>
+  <testcase name="testeGuerreiroSecundarios(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.002"/>
   <testcase name="testeGuerreiroSecundarios(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeChecarRegraDeClasseGuerreiro2" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeChecarRegraDeClasseGuerreiro2" classname="batalha.PersonagemTest" time="0.002"/>
   <testcase name="testeChecarRegraDeClasseGuerreiro3" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeChecarRegraDeClasseGuerreiro4" classname="batalha.PersonagemTest" time="0"/>
-  <testcase name="testeChecarRegraDeClasseGuerreiro5" classname="batalha.PersonagemTest" time="0"/>
-  <testcase name="testeChecarRegraDeClasseGuerreiro6" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeChecarRegraDeClasseGuerreiro4" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeChecarRegraDeClasseGuerreiro5" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeChecarRegraDeClasseGuerreiro6" classname="batalha.PersonagemTest" time="0.002"/>
+  <testcase name="testeChecarValorMinimo(int, int, int, int, boolean)[1]" classname="batalha.PersonagemTest" time="0.004"/>
+  <testcase name="testeChecarValorMinimo(int, int, int, int, boolean)[2]" classname="batalha.PersonagemTest" time="0.002"/>
+  <testcase name="testeChecarValorMinimo(int, int, int, int, boolean)[3]" classname="batalha.PersonagemTest" time="0.002"/>
   <testcase name="testeEmpatesAssassino(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.003"/>
-  <testcase name="testeEmpatesAssassino(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeEmpatesAssassino(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.002"/>
   <testcase name="testeEmpatesAssassino(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.001"/>
   <testcase name="testeEmpatesAssassino(int, int, int, int)[4]" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeChecarRegraDeClasseGuerreiroLancaExcecao" classname="batalha.PersonagemTest" time="0.001"/>
-  <testcase name="testeLimitesGuerreiro(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.003"/>
-  <testcase name="testeLimitesGuerreiro(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.002"/>
-  <testcase name="testeLimitesGuerreiro(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.003"/>
-  <testcase name="testeChecarTotalIgualA19_LancaExcecao" classname="batalha.PersonagemTest" time="0.002"/>
+  <testcase name="testeChecarRegraDeClasseGuerreiroLancaExcecao" classname="batalha.PersonagemTest" time="0"/>
+  <testcase name="testeLimitesGuerreiro(int, int, int, int)[1]" classname="batalha.PersonagemTest" time="0.002"/>
+  <testcase name="testeLimitesGuerreiro(int, int, int, int)[2]" classname="batalha.PersonagemTest" time="0.001"/>
+  <testcase name="testeLimitesGuerreiro(int, int, int, int)[3]" classname="batalha.PersonagemTest" time="0.002"/>
 </testsuite>

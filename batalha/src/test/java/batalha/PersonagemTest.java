@@ -15,158 +15,123 @@ import org.junit.jupiter.api.Test;
 
 class PersonagemTest {
 
-	// --- TESTE DE CONSTRUTOR ---//
+	// --- TESTE DE CONSTRUTOR --- //
 
-	@Test
-	void checarConstrutorAssassinoVazioEParametrizado(){
+	/**
+	 * Testa os construtores vazio e parametrizado das classes `Assassino` e `Guerreiro`.
+	 *
+	 * <p>O teste verifica se os atributos definidos manualmente em um personagem
+	 * criado com o construtor vazio são iguais aos atributos de um personagem
+	 * criado com o construtor parametrizado.</p>
+	 *
+	 * @param classe a classe do personagem a ser testado ("Assassino" ou "Guerreiro").
+	 * @param ataque o valor do atributo ataque do personagem.
+	 * @param velocidade o valor do atributo velocidade do personagem.
+	 * @param defesa o valor do atributo defesa do personagem.
+	 * @param resistencia o valor do atributo resistência do personagem.
+	 */
+	@ParameterizedTest
+	@CsvSource({
+			"Assassino, 7, 7, 3, 3",
+			"Guerreiro, 7, 3, 3, 7"
+	})
+	void checarConstrutoresVazioEParametrizado(String classe, int ataque, int velocidade, int defesa, int resistencia) {
+		Personagem personagemVazio = classe.equals("Assassino") ? new Assassino() : new Guerreiro();
+		personagemVazio.setAtaque(ataque);
+		personagemVazio.setVelocidade(velocidade);
+		personagemVazio.setDefesa(defesa);
+		personagemVazio.setResistencia(resistencia);
 
-		//Assassino inicializadp pelo construtor vazio
-		Assassino ass1 = new Assassino();
-		ass1.setAtaque(7);
-		ass1.setVelocidade(7);
-		ass1.setDefesa(3);
-		ass1.setResistencia(3);
+		Personagem personagemParametrizado = classe.equals("Assassino")
+				? new Assassino(ataque, defesa, velocidade, resistencia)
+				: new Guerreiro(ataque, velocidade, defesa, resistencia);
 
-		//Assassino inicializado pelo construtor preenchido
-		Assassino ass2 = new Assassino(7,3,7,3);
-
-		//checa se os atributos correspondem entre si
-		assertEquals(ass1.getAtaque(), ass2.getAtaque());
-		assertEquals(ass1.getDefesa(), ass2.getDefesa());
-		assertEquals(ass1.getVelocidade(), ass2.getVelocidade());
-		assertEquals(ass1.getResistencia(), ass2.getResistencia());
-
-
-	}
-	@Test
-	void checarConstrutorGuerreiroVazioEParametrizado(){
-
-		//Guerreiro inicializadp pelo construtor vazio
-		Guerreiro gue1 = new Guerreiro();
-		gue1.setAtaque(7);
-		gue1.setVelocidade(3);
-		gue1.setDefesa(3);
-		gue1.setResistencia(7);
-
-		//Assassino inicializado pelo construtor preenchido
-		Guerreiro gue2 = new Guerreiro(7,3,3,7);
-
-		//checa se os atributos correspondem entre si
-		assertEquals(gue1.getAtaque(), gue2.getAtaque());
-		assertEquals(gue1.getDefesa(), gue2.getDefesa());
-		assertEquals(gue1.getVelocidade(), gue2.getVelocidade());
-		assertEquals(gue1.getResistencia(), gue2.getResistencia());
-
+		assertEquals(personagemVazio.getAtaque(), personagemParametrizado.getAtaque());
+		assertEquals(personagemVazio.getDefesa(), personagemParametrizado.getDefesa());
+		assertEquals(personagemVazio.getVelocidade(), personagemParametrizado.getVelocidade());
+		assertEquals(personagemVazio.getResistencia(), personagemParametrizado.getResistencia());
 	}
 
+// --- TESTE DE CHECAR TOTAL --- //
 
-
-	// --- TESTE DE CHECAR TOTAL ---//
-	@Test
-	void testeChecarTotalIgualA20_NaoLancaExcecao() {
+	/**
+	 * Testa o método `checarTotal` para verificar se o somatório dos atributos de um personagem
+	 * corresponde às regras definidas (deve ser igual a 20).
+	 *
+	 * Se o somatório for diferente de 20, uma exceção `IllegalStateException` é esperada.
+	 *
+	 * @param ataque o valor do atributo ataque do personagem.
+	 * @param defesa o valor do atributo defesa do personagem.
+	 * @param resistencia o valor do atributo resistência do personagem.
+	 * @param velocidade o valor do atributo velocidade do personagem.
+	 * @param esperaExcecao indica se uma exceção é esperada para o caso de teste.
+	 */
+	@ParameterizedTest
+	@CsvSource({
+			"7, 6, 4, 3, false",  // Total = 20, não deve lançar exceção
+			"7, 5, 4, 3, true",   // Total = 19, deve lançar exceção
+			"9, 5, 4, 3, true"    // Total = 21, deve lançar exceção
+	})
+	void testeChecarTotal(int ataque, int defesa, int resistencia, int velocidade, boolean esperaExcecao) {
 		Personagem p = new Personagem() {
 			@Override
 			void checarRegraDeClasse() {
-				// Deixado em branco de propósito
+				// Implementação vazia para fins de teste
 			}
 		};
 
-		p.setAtaque(7);
-		p.setDefesa(6);
-		p.setResistencia(4);
-		p.setVelocidade(3);
+		p.setAtaque(ataque);
+		p.setDefesa(defesa);
+		p.setResistencia(resistencia);
+		p.setVelocidade(velocidade);
 
-		assertDoesNotThrow(() -> p.checarTotal());
+		if (esperaExcecao) {
+			assertThrows(IllegalStateException.class, p::checarTotal);
+		} else {
+			assertDoesNotThrow(p::checarTotal);
+		}
 	}
 
-	@Test
-	void testeChecarTotalIgualA19_LancaExcecao() {
+// --- TESTE DE MINIMO --- //
+
+	/**
+	 * Testa o método `checarValorMinimo` para verificar se todos os atributos de um personagem
+	 * atendem ao valor mínimo exigido (>= 3).
+	 *
+	 * Se algum atributo for menor que 3, uma exceção `IllegalStateException` é esperada.
+	 *
+	 * @param ataque o valor do atributo ataque do personagem.
+	 * @param defesa o valor do atributo defesa do personagem.
+	 * @param resistencia o valor do atributo resistência do personagem.
+	 * @param velocidade o valor do atributo velocidade do personagem.
+	 * @param deveLancarExcecao indica se uma exceção é esperada para o caso de teste.
+	 */
+	@ParameterizedTest
+	@CsvSource({
+			"7, 5, 2, 4, true",  // Resistência menor que 3, deve lançar exceção
+			"7, 5, 3, 4, false", // Resistência igual a 3, não deve lançar exceção
+			"7, 5, 4, 4, false"  // Resistência maior que 3, não deve lançar exceção
+	})
+	void testeChecarValorMinimo(int ataque, int defesa, int resistencia, int velocidade, boolean deveLancarExcecao) {
 		Personagem p = new Personagem() {
 			@Override
 			void checarRegraDeClasse() {
-				// Deixado em branco de propósito
-			}
-		};
-
-		p.setAtaque(7);
-		p.setDefesa(5);
-		p.setResistencia(4);
-		p.setVelocidade(3);
-
-		assertThrows(IllegalStateException.class, () -> p.checarTotal());
-	}
-
-	@Test
-	void testeChecarTotalIgualA21_LancaExcecao() {
-		Personagem p = new Personagem() {
-			@Override
-			void checarRegraDeClasse() {
-				// Deixado em branco de propósito
-			}
-		};
-
-		p.setAtaque(9);
-		p.setDefesa(5);
-		p.setResistencia(4);
-		p.setVelocidade(3);
-
-		assertThrows(IllegalStateException.class, () -> p.checarTotal());
-	}
-
-
-	// --- TESTE DE MINIMO ---//
-
-	@Test
-	void testeChecarMinimoIgualA2_LancaExcecao() {
-		Personagem p = new Personagem() {
-			@Override
-			void checarRegraDeClasse() {
-				// Deixado em branco de propósito
-			}
-		};
-
-		p.setAtaque(7);
-		p.setDefesa(5);
-		p.setResistencia(2);
-		p.setVelocidade(4);
-
-		assertThrows(IllegalStateException.class, () -> p.checarValorMinimo(p.getResistencia()));
-	}
-
-	@Test
-	void testeChecarMinimoIgualA3_NaoLancaExcecao() {
-		Personagem p = new Personagem() {
-			@Override
-			void checarRegraDeClasse() {
-				// Deixado em branco de propósito
-			}
-		};
-
-		p.setAtaque(7);
-		p.setDefesa(5);
-		p.setResistencia(3);
-		p.setVelocidade(4);
-
-		assertDoesNotThrow(() -> p.checarValorMinimo(p.getResistencia()));
-	}
-	@Test
-	void testeChecarMinimoIgualA4_NaoLancaExcecao() {
-		Personagem p = new Personagem() {
-			@Override
-			void checarRegraDeClasse() {
-				if(!checarEGuerreiro() && !checarEAssasino()){
+				if (!checarEGuerreiro() && !checarEAssasino()) {
 					throw new IllegalStateException("Os atributos não correspondem a nenhuma classe válida (Guerreiro ou Assassino).");
 				}
-
 			}
 		};
 
-		p.setAtaque(7);
-		p.setDefesa(5);
-		p.setResistencia(3);
-		p.setVelocidade(4);
+		p.setAtaque(ataque);
+		p.setDefesa(defesa);
+		p.setResistencia(resistencia);
+		p.setVelocidade(velocidade);
 
-		assertDoesNotThrow(() -> p.checarValorMinimo(p.getVelocidade()));
+		if (deveLancarExcecao) {
+			assertThrows(IllegalStateException.class, () -> p.checarValorMinimo(resistencia));
+		} else {
+			assertDoesNotThrow(() -> p.checarValorMinimo(resistencia));
+		}
 	}
 
 
@@ -283,7 +248,7 @@ class PersonagemTest {
 
 	@Test
 	void testeChecarRegraDeClasseGuerreiro6(){
-		
+
 		Personagem p = new Guerreiro();
 
 		p.setAtaque(5);
@@ -356,6 +321,15 @@ class PersonagemTest {
 		assertFalse(p.checarEAssasino());
 	}
 
+
+	/**
+	 * Testa os limites dos atributos de um Guerreiro para verificar se seguem as regras da classe.
+	 *
+	 * @param ataque valor do atributo ataque do Guerreiro.
+	 * @param resistencia valor do atributo resistência do Guerreiro.
+	 * @param defesa valor do atributo defesa do Guerreiro.
+	 * @param velocidade valor do atributo velocidade do Guerreiro.
+	 */
 	@ParameterizedTest(name = "Guerreiro próximo ao limite com Ataque {0} e Resistência {1}")
 	@CsvSource({
 			"6, 6, 4, 4", // Válido
@@ -376,6 +350,14 @@ class PersonagemTest {
 		}
 	}
 
+	/**
+	 * Testa os limites de um Assassino com atributos que não seguem as regras de sua classe.
+	 *
+	 * @param ataque valor do atributo ataque do Assassino.
+	 * @param velocidade valor do atributo velocidade do Assassino.
+	 * @param defesa valor do atributo defesa do Assassino.
+	 * @param resistencia valor do atributo resistência do Assassino.
+	 */
 	@ParameterizedTest(name = "Assassino inválido com Ataque {0}, Velocidade {1}, Defesa {2}, Resistência {3}")
 	@CsvSource({
 			"7, 7, 8, 3", // Defesa maior que Velocidade (Inválido)
@@ -389,11 +371,18 @@ class PersonagemTest {
 		assassino.setDefesa(defesa);
 		assassino.setResistencia(resistencia);
 
-		// Verifica que as regras da classe lançam exceção para cenários inválidos
 		assertThrows(IllegalStateException.class, assassino::checarRegraDeClasse,
 				"Os atributos não devem ser válidos para a classe Assassino.");
 	}
 
+	/**
+	 * Testa atributos de empate em Guerreiro para verificar se permanecem válidos conforme as regras da classe.
+	 *
+	 * @param ataque valor do atributo ataque do Guerreiro.
+	 * @param resistencia valor do atributo resistência do Guerreiro.
+	 * @param defesa valor do atributo defesa do Guerreiro.
+	 * @param velocidade valor do atributo velocidade do Guerreiro.
+	 */
 	@ParameterizedTest(name = "Guerreiro com Ataque {0} e Resistência {1} válidos")
 	@CsvSource({
 			"7, 7, 3, 3",
@@ -406,9 +395,18 @@ class PersonagemTest {
 		guerreiro.setResistencia(resistencia);
 		guerreiro.setDefesa(defesa);
 		guerreiro.setVelocidade(velocidade);
+
 		assertTrue(guerreiro.checarEGuerreiro(), "Os atributos devem ser válidos para um Guerreiro.");
 	}
 
+	/**
+	 * Testa atributos de empate em Assassino para verificar se permanecem válidos conforme as regras da classe.
+	 *
+	 * @param ataque valor do atributo ataque do Assassino.
+	 * @param velocidade valor do atributo velocidade do Assassino.
+	 * @param defesa valor do atributo defesa do Assassino.
+	 * @param resistencia valor do atributo resistência do Assassino.
+	 */
 	@ParameterizedTest(name = "Assassino válido com Ataque={0}, Velocidade={1}, Defesa={2}, Resistência={3}")
 	@CsvSource({
 			"7, 7, 3, 3", // Ataque e Velocidade empatados, secundários menores
@@ -426,7 +424,14 @@ class PersonagemTest {
 		assertDoesNotThrow(assassino::checarRegraDeClasse, "Os atributos devem ser válidos para um Assassino.");
 	}
 
-
+	/**
+	 * Testa casos inválidos onde atributos secundários de Guerreiro ultrapassam os principais.
+	 *
+	 * @param ataque valor do atributo ataque do Guerreiro.
+	 * @param resistencia valor do atributo resistência do Guerreiro.
+	 * @param defesa valor do atributo defesa do Guerreiro.
+	 * @param velocidade valor do atributo velocidade do Guerreiro.
+	 */
 	@ParameterizedTest(name = "Guerreiro inválido com Defesa {2} ou Velocidade {3} maior que Ataque/Resistência")
 	@CsvSource({
 			"7, 7, 8, 3", // Defesa maior que Resistência
@@ -442,6 +447,14 @@ class PersonagemTest {
 		assertThrows(IllegalStateException.class, guerreiro::checarRegraDeClasse, "Os atributos secundários não podem ultrapassar os principais para um Guerreiro.");
 	}
 
+	/**
+	 * Testa casos inválidos onde atributos secundários de Assassino ultrapassam os principais.
+	 *
+	 * @param ataque valor do atributo ataque do Assassino.
+	 * @param velocidade valor do atributo velocidade do Assassino.
+	 * @param defesa valor do atributo defesa do Assassino.
+	 * @param resistencia valor do atributo resistência do Assassino.
+	 */
 	@ParameterizedTest(name = "Assassino inválido com Defesa {2} ou Resistência {3} maior que Ataque/Velocidade")
 	@CsvSource({
 			"7, 7, 8, 3", // Defesa maior que Velocidade
@@ -456,6 +469,7 @@ class PersonagemTest {
 
 		assertThrows(IllegalStateException.class, assassino::checarRegraDeClasse, "Os atributos secundários não podem ultrapassar os principais para um Assassino.");
 	}
+
 
 
 }

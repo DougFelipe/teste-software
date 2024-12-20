@@ -13,493 +13,288 @@ import java.security.SecureRandom;
 
 public class BatalhaTest {
 
-    //---------- INICIALIZANDO CLASSES VAZIAS ----------//
+    // ---------- INICIALIZANDO CLASSES VAZIAS ---------- //
+    /**
+     * Instâncias de Batalha e Personagens criadas para reutilização nos testes,
+     * evitando a necessidade de recriação contínua.
+     */
+    private final Batalha batalha = new Batalha();
+    private final Personagem assasino1 = new Assassino();
+    private final Personagem assasino2 = new Assassino();
+    private final Personagem guerreiro1 = new Guerreiro();
+    private final Personagem guerreiro2 = new Guerreiro();
 
-    // Essas classes são iniciadas como vazias para serem manipuladas
-    // Durante as varias sessões de testes, excluindo a necessidade
-    // De ficar criando ou inicializando toda hora
+    private final Personagem p1 = new Guerreiro();
+    private final Personagem p2 = new Assassino();
 
-    Batalha batalha = new Batalha();
-    Personagem assasino1 = new Assassino();
-    Personagem assasino2 = new Assassino();
-    Personagem guerreiro1 = new Guerreiro();
-    Personagem guerreiro2 = new Guerreiro();
-
-
-    Personagem p1 = new Guerreiro();
-    Personagem p2 = new Assassino();
-
-
-
-
-    //---------- TESTE DE DANO CRITICO ----------//
+    // ---------- TESTE DE DANO CRÍTICO ---------- //
+    /**
+     * Testa o comportamento de golpes críticos, verificando se o método
+     * {@link Batalha#temGolpeCritico()} retorna valores aleatórios esperados.
+     */
     @Test
     void testeGolpeCritico() {
         Personagem guerreiro = new Guerreiro();
-
-        //Propositalmente este é um teste que tem comportamento aleatorio
+        // Teste com comportamento aleatório
         boolean checadorDeGolpeCritico = batalha.temGolpeCritico();
-         assertFalse(checadorDeGolpeCritico);
+        // Neste caso, apenas validamos que o método executa sem falhas.
+        assertFalse(checadorDeGolpeCritico);
+    }
+
+    // ---------- TESTES DE DANO BASE ---------- //
+    /**
+     * Testa o cálculo do dano base utilizando diferentes variações e valores de ataque.
+     *
+     * TABELA DE VARIAÇÕES:
+     * 
+     *     0 = 80%
+     *     1 = 90%
+     *     2 = 100%
+     *     3 = 110%
+     *     4 = 120%
+     * 
+     *
+     * @param ataque o valor de ataque do personagem.
+     * @param variacao o índice da variação de dano.
+     * @param esperado o dano esperado para o cenário.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            // Testes para Assassino com ataque 7
+            "7, 0, 6",
+            "7, 1, 6",
+            "7, 2, 7",
+            "7, 3, 8",
+            "7, 4, 8",
+            // Testes para Assassino com ataque 10
+            "10, 0, 8",
+            "10, 1, 9",
+            "10, 2, 10",
+            "10, 3, 11",
+            "10, 4, 12"
+    })
+    void testandoDanoBase(int ataque, int variacao, int esperado) {
+        Personagem assassino = new Assassino();
+        assassino.setAtaque(ataque);
+
+        int danoCalculado = batalha.calcularDanoBase(assassino, variacao);
+        assertEquals(esperado, danoCalculado);
+    }
+
+    // ---------- TESTE DE EVASÃO CONTROLADA ---------- //
+    /**
+     * Testa o comportamento do método {@link Batalha#verificarEvasao(Personagem, Personagem, int)}
+     * em diferentes cenários controlados de ataque e defesa.
+     *
+     * @param atk1 o ataque do personagem atacante.
+     * @param res1 a resistência do personagem atacante.
+     * @param vel1 a velocidade do personagem atacante.
+     * @param def1 a defesa do personagem atacante.
+     * @param atk2 o ataque do personagem defensor.
+     * @param res2 a resistência do personagem defensor.
+     * @param vel2 a velocidade do personagem defensor.
+     * @param def2 a defesa do personagem defensor.
+     * @param randomico o valor aleatório usado para simular evasão.
+     * @param esperadoEvadiu o resultado esperado da evasão ({@code true} ou {@code false}).
+     */
+    @ParameterizedTest
+    @CsvSource({
+            // Caso 1: Evasão bem-sucedida
+            "7, 7, 3, 3, 7, 7, 7, 3, 7, true",
+            // Caso 2: Evasão bem-sucedida no limite
+            "7, 7, 3, 3, 7, 7, 7, 3, 8, true",
+            // Caso 3: Evasão mal-sucedida (randomico maior que a chance)
+            "7, 7, 3, 3, 7, 7, 7, 3, 9, false",
+            // Caso 4: Evasão mal-sucedida por empate de velocidade
+            "7, 7, 7, 3, 7, 7, 7, 3, 1, false"
+    })
+    void testeDeEvasao(int atk1, int res1, int vel1, int def1,
+                       int atk2, int res2, int vel2, int def2,
+                       int randomico, boolean esperadoEvadiu) {
+
+        // Configuração do atacante
+        guerreiro1.setAtaque(atk1);
+        guerreiro1.setResistencia(res1);
+        guerreiro1.setVelocidade(vel1);
+        guerreiro1.setDefesa(def1);
+
+        // Configuração do defensor
+        assasino2.setAtaque(atk2);
+        assasino2.setResistencia(res2);
+        assasino2.setVelocidade(vel2);
+        assasino2.setDefesa(def2);
+
+        // Verificação da evasão
+        boolean evadiu = batalha.verificarEvasao(guerreiro1, assasino2, randomico);
+        assertEquals(esperadoEvadiu, evadiu);
     }
 
 
 
 
-    //---------- TESTES DE DANO BASE ----------//
+// ---------- TESTE DE DANO FINAL + REMOVER HP ---------- //
 
-    //TABELA DE VARIAÇÕES
-    //0 = 80%
-    //1 = 90%
-    //2 = 100%
-    //3 = 110%
-    //4 = 120%
+    /**
+     * Testa o cálculo de dano final e a remoção de HP do defensor.
+     *
+     * @param ataque valor do atributo de ataque do atacante.
+     * @param defesa valor do atributo de defesa do defensor.
+     * @param variacaoDano variação aleatória no cálculo do dano base.
+     * @param golpeCritico indica se o ataque possui golpe crítico.
+     * @param esperadoDano valor esperado para o dano final calculado.
+     * @param esperadoHP HP esperado para o defensor após o dano, -1 se não for aplicável.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "7, 3, 2, false, 4, -1", // Sem golpe crítico, dano infligido 4
+            "7, 3, 2, true, 6, -1",  // Com golpe crítico, dano infligido 6
+            "7, 4, 2, false, 3, -1", // Sem golpe crítico, dano infligido 3
+            "7, 4, 2, true, 4, 96"   // Com golpe crítico, dano infligido 4, HP restante 96
+    })
+    void testeDanoFinalRemocaoHP(int ataque, int defesa, int variacaoDano, boolean golpeCritico, int esperadoDano, int esperadoHP) {
+        assasino1.setAtaque(ataque);
+        assasino2.setDefesa(defesa);
 
+        if (esperadoHP != -1) {
+            assasino2.setVida(100); // Apenas para casos que envolvem remoção de HP
+        }
 
-    @Test
-    void testandoDanoBaseDeATQ7eV0(){
-        assasino1.setAtaque(7);
-        //5,6
-        int ataqueFinal = batalha.calcularDanoBase(assasino1,0);
-        assertEquals(6, ataqueFinal);
-    }
+        int danoBase = batalha.calcularDanoBase(assasino1, variacaoDano);
+        int danoFinal = batalha.calcularDanoFinal(danoBase, golpeCritico, assasino2);
+        assertEquals(esperadoDano, danoFinal, "Dano final calculado incorretamente.");
 
-    @Test
-    void testandoDanoBaseDeATQ7eV1(){
-        assasino1.setAtaque(7);
-        //6,3
-        int ataqueFinal = batalha.calcularDanoBase(assasino1,1);
-        assertEquals(6, ataqueFinal);
-    }
-    @Test
-    void testandoDanoBaseDeATQ7eV2(){
-        assasino1.setAtaque(7);
-        //7,0
-        int ataqueFinal = batalha.calcularDanoBase(assasino1,2);
-        assertEquals(7, ataqueFinal);
-    }
-    @Test
-    void testandoDanoBaseDeATQ7eV3(){
-        assasino1.setAtaque(7);
-        //7,7
-        int ataqueFinal = batalha.calcularDanoBase(assasino1,3);
-        assertEquals(8, ataqueFinal);
-    }
-    @Test
-    void testandoDanoBaseDeATQ7eV4(){
-        assasino1.setAtaque(7);
-        // 8,4
-        int ataqueFinal = batalha.calcularDanoBase(assasino1,4);
-        assertEquals(8, ataqueFinal);
-    }
-    @Test
-    void testandoDanoBaseDeATQ10eV0(){
-        assasino2.setAtaque(10);
-
-        int ataqueFinal = batalha.calcularDanoBase(assasino2,0);
-        assertEquals(8, ataqueFinal);
-    }
-    @Test
-    void testandoDanoBaseDeATQ10eV1(){
-        assasino2.setAtaque(10);
-
-        int ataqueFinal = batalha.calcularDanoBase(assasino2,1);
-        assertEquals(9, ataqueFinal);
-    }
-    @Test
-    void testandoDanoBaseDeATQ10eV2(){
-        assasino2.setAtaque(10);
-
-        int ataqueFinal = batalha.calcularDanoBase(assasino2,2);
-        assertEquals(10, ataqueFinal);
-    }
-
-    @Test
-    void testandoDanoBaseDeATQ10eV3(){
-        assasino2.setAtaque(10);
-
-        int ataqueFinal = batalha.calcularDanoBase(assasino2,3);
-        assertEquals(11, ataqueFinal);
-    }
-
-    @Test
-    void testandoDanoBaseDeATQ10eV4(){
-        assasino2.setAtaque(10);
-
-        int ataqueFinal = batalha.calcularDanoBase(assasino2,4);
-        assertEquals(12, ataqueFinal);
+        if (esperadoHP != -1) {
+            batalha.removerHP(danoFinal, assasino2);
+            assertEquals(esperadoHP, assasino2.getVida(), "HP restante do defensor calculado incorretamente.");
+        }
     }
 
 
-    //---------- TESTE DE EVASÃO CONTROLADA ----------//
 
-    @Test
-    void testeDeEvasaoBemSucedida(){
+// ---------- TESTE SE TEM VENCEDOR ---------- //
 
-        // Atacante é o guerreiro
-        guerreiro1.setAtaque(7);
-        guerreiro1.setResistencia(7);
-        guerreiro1.setVelocidade(3);
-        guerreiro1.setDefesa(3);
+    /**
+     * Testa se a batalha detecta corretamente um vencedor.
+     *
+     * @param ataqueP1 ataque do personagem 1.
+     * @param defesaP2 defesa do personagem 2.
+     * @param vidaP2 HP inicial do personagem 2.
+     * @param variacaoDano variação no cálculo do dano base.
+     * @param esperadoVencedor indica se deve haver um vencedor.
+     */
 
-        // Defensor é o assassino
-        assasino2.setAtaque(7);
-        assasino2.setVelocidade(7);
-        assasino2.setDefesa(3);
-        assasino2.setResistencia(3);
+    @ParameterizedTest
+    @CsvSource({
+            "7, 3, 6, 2, true", // HP igual a 0
+            "7, 3, 5, 2, true", // HP menor que 0
+            "7, 3, 7, 2, false" // Sem vencedor
+    })
+    void checarVencedor(int ataqueP1, int defesaP2, int vidaP2, int variacaoDano, boolean esperadoVencedor) {
+        assasino1.setAtaque(ataqueP1);
+        assasino2.setDefesa(defesaP2);
+        assasino2.setVida(vidaP2);
 
-        //FORMULA: CHANCE DE EVASÃO(%) = MIN(50, (Y.VEL - X.VEL) * 2)
-        // seguindo a formula temos = min(50, (7 -3) * 2)
-        // ficando com min(50,8) que é igual a 8
-        // entao usaremos 7 que é menor que 8
-
-        boolean evadiu = batalha.verificarEvasao(guerreiro1, assasino2, 7);
-        assertTrue(evadiu);
-
-    }
-    @Test
-    void testeDeEvasaoBemSucedidaValorLimite(){
-
-        // Atacante é o guerreiro
-        guerreiro1.setAtaque(7);
-        guerreiro1.setResistencia(7);
-        guerreiro1.setVelocidade(3);
-        guerreiro1.setDefesa(3);
-
-        // Defensor é o assassino
-        assasino2.setAtaque(7);
-        assasino2.setVelocidade(7);
-        assasino2.setDefesa(3);
-        assasino2.setResistencia(3);
-
-        //FORMULA: CHANCE DE EVASÃO(%) = MIN(50, (Y.VEL - X.VEL) * 2)
-        // seguindo a formula temos = min(50, (7 -3) * 2)
-        // ficando com min(50,8) que é igual a 8
-        // entao usaremos 8 que é o valor limite para a evasão
-
-        boolean evadiu = batalha.verificarEvasao(guerreiro1, assasino2, 8);
-        assertTrue(evadiu);
-
-    }
-    @Test
-    void testeDeEvasaoMalSucedidaRandomicoMaiorQueAChance(){
-
-        // Atacante é o guerreiro
-        guerreiro1.setAtaque(7);
-        guerreiro1.setResistencia(7);
-        guerreiro1.setVelocidade(3);
-        guerreiro1.setDefesa(3);
-
-        // Defensor é o assassino
-        assasino2.setAtaque(7);
-        assasino2.setVelocidade(7);
-        assasino2.setDefesa(3);
-        assasino2.setResistencia(3);
-
-        //FORMULA: CHANCE DE EVASÃO(%) = MIN(50, (Y.VEL - X.VEL) * 2)
-        // seguindo a formula temos = min(50, (7 -3) * 2)
-        // ficando com min(50,8) que é igual a 8
-        // entao usaremos 9 que é maior que 8
-
-        boolean evadiu = batalha.verificarEvasao(guerreiro1, assasino2, 9);
-        assertFalse(evadiu);
-
-    }
-
-    @Test
-    void testeDeEvasaoMalSucedidaEMPATE(){
-        // Usarei personagens de mesma configuração
-        // Já que velocidades iguais resultam numa
-        // Evasão mal sucedida.
-
-        assasino1.setAtaque(7);
-        assasino1.setVelocidade(7);
-        assasino1.setDefesa(3);
-        assasino1.setResistencia(3);
-
-        assasino2.setAtaque(7);
-        assasino2.setVelocidade(7);
-        assasino2.setDefesa(3);
-        assasino2.setResistencia(3);
-
-        boolean evadiu = batalha.verificarEvasao(assasino1, assasino2, 1);
-
-        assertFalse(evadiu);
-
-    }
-
-
-    //---------- TESTE DE DANO FINAL + REMOVER HP ----------//
-
-    @Test
-    void testeDanoInfrigido7DeDano3DeDefesaSemGolpeCritico(){
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // 7 - 3 = 4  sem golpe critico
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, assasino2);
-
-        assertEquals(4, danoInfrigido);
-
-
-
-    }
-    @Test
-    void testeDanoInfrigido7DeDano3DeDefesaComGolpeCritico(){
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // (7 - 3) * 1,5 = 6
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, true, assasino2);
-
-        assertEquals(6, danoInfrigido);
-
-
-
-    }
-
-    @Test
-    void testeDanoInfrigido7DeDano4DeDefesaSemGolpeCritico(){
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(4);
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // 7 - 4 = 3  sem golpe critico
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, assasino2);
-
-        assertEquals(3, danoInfrigido);
-
-
-
-    }
-
-    @Test
-    void testeDanoInfrigido7DeDano4DeDefesaComGolpeCritico(){
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(4);
-        assasino2.setVida(100);
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // (7 - 4) * 1,5 = 4,5 == 4
+        int danoBase = batalha.calcularDanoBase(assasino1, variacaoDano);
         int danoInfrigido = batalha.calcularDanoFinal(danoBase, true, assasino2);
         batalha.removerHP(danoInfrigido, assasino2);
 
-        assertEquals(4, danoInfrigido);
-        assertEquals(96, assasino2.getVida());
-
-
-
-    }
-
-    @Test
-    void testeRemoverHP7DeDano3DeDefesaSemGolpeCritico(){
-
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        //assasino2.setVida(100);
-
-
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-
-        // 7 - 3 = 4  sem golpe critico
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, assasino2);
-
-        //removendo 4 de hp dos 100 iniciais
-        batalha.removerHP(danoInfrigido,assasino2);
-        assertEquals(96, assasino2.getVida());
-
-
-    }
-
-    @Test
-    void testeRemoverHP7DeDano3DeDefesaComGolpeCritico(){
-
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        assasino2.setVida(100);
-
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // (7 - 3) * 1,5 = 6
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, true, assasino2);
-
-        //removendo 6 de hp dos 100 iniciais
-        batalha.removerHP(danoInfrigido,assasino2);
-        assertEquals(94, assasino2.getVida());
-
-
-
+        boolean temVencedor = batalha.temVencedor(assasino1, assasino2);
+        assertEquals(esperadoVencedor, temVencedor);
     }
 
 
-    //---------- TESTE SE TEM VENCEDOR ----------//
-
-    @Test
-    void checarVencedorQuandoTemVencedorPorHPigualAZero(){
-
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        assasino2.setVida(6);
-
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // (7 - 3) * 1,5 = 6
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, true, assasino2);
-
-        //removendo 6 de hp dos 6 iniciais
-        batalha.removerHP(danoInfrigido,assasino2);
-        boolean temVencedor = batalha.temVencedor(assasino1,assasino2);
-
-        assertTrue(temVencedor);
-
-
-    }
-
-    @Test
-    void checarVencedorQuandoTemVencedorPorHPmenorQueZero(){
-
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        assasino2.setVida(5);
-
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // (7 - 3) * 1,5 = 6
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, true, assasino2);
-
-        //removendo 6 de hp dos 5 iniciais
-        batalha.removerHP(danoInfrigido,assasino2);
-        boolean temVencedor = batalha.temVencedor(assasino1,assasino2);
-
-        assertTrue(temVencedor);
-
-
-    }
-
-    @Test
-    void checarVencedorQuandoNaoTemVencedor(){
-
-        assasino1.setAtaque(7);
-        assasino2.setDefesa(3);
-        assasino2.setVida(7);
-
-        // ataque base esperado 7,0
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-        // (7 - 3) * 1,5 = 6
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, true, assasino2);
-
-        //removendo 6 de hp dos 7 iniciais
-        batalha.removerHP(danoInfrigido,assasino2);
-        boolean temVencedor = batalha.temVencedor(assasino1,assasino2);
-
-        assertFalse(temVencedor);
-
-    }
-
-    @Test
-    void checarP1VenceuABatalha(){
-        assasino1.setVida(10);
-        assasino2.setVida(0);
-
-        //é esperado que o Assassino1 seja declarado o vencedor
-        assertEquals("O vencedor do confronto foi: "+ assasino1, batalha.quemVenceu(assasino1,assasino2) );
-
-    }
-    @Test
-    void checarP2VenceuABatalha(){
-        assasino1.setVida(0);
-        assasino2.setVida(10);
-
-        //é esperado que o Assassino2 seja declarado o vencedor
-        assertEquals("O vencedor do confronto foi: "+ assasino2, batalha.quemVenceu(assasino1,assasino2) );
-
-    }
-
-    @Test
-    void checarTemvencedorP1(){
-        assasino1.setVida(10);
-        assasino2.setVida(0);
-
-        boolean verificador = batalha.temVencedor(assasino1,assasino2);
-
-        assertTrue(verificador);
-    }
-    @Test
-    void checarTemvencedorP2(){
-        assasino1.setVida(0);
-        assasino2.setVida(10);
-
-        boolean verificador = batalha.temVencedor(assasino1,assasino2);
-
-        assertTrue(verificador);
-    }
-    @Test
-    void checarNaoTemvencedor(){
-        assasino1.setVida(10);
-        assasino2.setVida(10);
-
-        boolean verificador = batalha.temVencedor(assasino1,assasino2);
-
-        assertFalse(verificador);
-    }
-
-
-    //---------- TESTANDO FLUXO DE BATALHA ----------//
-
-    // ORDEM DOS TURNOS
+    /**
+     * Testa qual personagem venceu o combate.
+     *
+     * @param vidaP1 HP do personagem 1.
+     * @param vidaP2 HP do personagem 2.
+     * @param vencedorEsperado mensagem esperada indicando o vencedor.
+     */
     @ParameterizedTest
     @CsvSource({
-            "5, 3, personagem 1 começa",  // p1 maior velocidade
-            "3, 5, personagem 2 começa",  // p2 maior velocidade
+            "10, 0, O vencedor do confronto foi: Personagem 1", // P1 venceu
+            "0, 10, O vencedor do confronto foi: Personagem 2"  // P2 venceu
+    })
+    void checarQuemVenceu(int vidaP1, int vidaP2, String vencedorEsperado) {
+        p1.setVida(vidaP1);
+        p2.setVida(vidaP2);
+
+        String vencedor = batalha.quemVenceu(p1, p2);
+        assertEquals(vencedorEsperado, vencedor);
+    }
+
+
+    /**
+     * Testa se existe um vencedor na batalha.
+     *
+     * @param vidaP1 HP do personagem 1.
+     * @param vidaP2 HP do personagem 2.
+     * @param esperadoResultado indica se há um vencedor.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "10, 0, true",  // P1 é vencedor
+            "0, 10, true",  // P2 é vencedor
+            "10, 10, false" // Sem vencedor
+    })
+    void checarTemVencedor(int vidaP1, int vidaP2, boolean esperadoResultado) {
+        assasino1.setVida(vidaP1);
+        assasino2.setVida(vidaP2);
+
+        boolean temVencedor = batalha.temVencedor(assasino1, assasino2);
+        assertEquals(esperadoResultado, temVencedor);
+    }
+
+    /**
+     * Testa quem começa o combate com base na maior velocidade.
+     *
+     * @param velP1 velocidade do personagem 1.
+     * @param velP2 velocidade do personagem 2.
+     * @param esperado mensagem esperada indicando quem começa atacando.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "5, 3, personagem 1 começa",  // P1 maior velocidade
+            "3, 5, personagem 2 começa"   // P2 maior velocidade
     })
     void testeDeterminarQuemComecaMaiorVelocidade(int velP1, int velP2, String esperado) {
         p1.setVelocidade(velP1);
         p2.setVelocidade(velP2);
 
         String quemComeca = batalha.determinarQuemComecaAtacando(p1, p2);
-
         assertEquals(esperado, quemComeca);
     }
 
+    /**
+     * Testa se o ataque foi esquivado pelo defensor.
+     */
     @Test
-    void testeDeterminarQuemComecaEmpateAleatorio() {
-        // Configuração de velocidades iguais
-        p1.setVelocidade(5);
-        p2.setVelocidade(5);
+    void ataqueEsquivado() {
+        guerreiro2.setAtaque(7);
+        guerreiro2.setResistencia(7);
+        guerreiro2.setDefesa(3);
+        guerreiro2.setVelocidade(3);
 
-        // Simula resultados aleatórios diferentes
-        SecureRandom mockRandom = Mockito.mock(SecureRandom.class);
-        Mockito.when(mockRandom.nextInt(2)).thenReturn(0, 1); // Primeiro retorna 0, depois 1
+        assasino1.setAtaque(10);
+        assasino1.setDefesa(3);
+        assasino1.setVelocidade(25);
+        assasino1.setResistencia(3);
+        int vidaInicialAssassino = 100;
+        assasino1.setVida(vidaInicialAssassino);
 
-        // Verifica se o método retorna "personagem 1 começa" para randomico 0
-        String resultado1 = batalha.determinarQuemComecaAtacando(p1, p2);
-        assertTrue(
-                resultado1.equals("personagem 1 começa") || resultado1.equals("personagem 2 começa"),
-                "O resultado deve ser um dos dois personagens começando."
-        );
-
-        // Verifica se o método retorna "personagem 2 começa" para randomico 1
-        String resultado2 = batalha.determinarQuemComecaAtacando(p1, p2);
-        assertTrue(
-                resultado2.equals("personagem 1 começa") || resultado2.equals("personagem 2 começa"),
-                "O resultado deve ser um dos dois personagens começando."
-        );
+        batalha.atacar(guerreiro2, assasino1);
+        assertEquals(vidaInicialAssassino, assasino1.getVida());
     }
 
-    // FLUXO DA BATALHA
     @ParameterizedTest
     @CsvSource({
             "10, 3, 3, 3, 10, 3, 3, 3, 0",  // Ambos personagens terminam com 0 HP
-            "10, 3, 3, 3, 10, 3, 3, 2, 0",  // p1 termina com 0 HP
-            "10, 3, 3, 3, 10, 3, 3, 3, 0"  // p2
+            "10, 3, 3, 3, 10, 3, 3, 2, 0",  // P1 termina com 0 HP
+            "10, 3, 3, 3, 10, 3, 3, 3, 0"   // P2 termina com 0 HP
     })
     void testeFluxoCombateCompleto(int atkP1, int velP1, int defP1, int resP1,
                                    int atkP2, int velP2, int defP2, int resP2,
                                    int hpFinalP2) {
-
-        // Configuração inicial dos personagens
         Personagem p1 = new Guerreiro();
         Personagem p2 = new Assassino();
         p1.setAtaque(atkP1);
@@ -514,7 +309,6 @@ public class BatalhaTest {
         p2.setResistencia(resP2);
         p2.setVida(10);
 
-        // Simulação do combate até o fim
         while (!batalha.temVencedor(p1, p2)) {
             batalha.atacar(p1, p2);
             if (!batalha.temVencedor(p1, p2)) {
@@ -522,167 +316,32 @@ public class BatalhaTest {
             }
         }
 
-        // Verificar vencedor e validar HP final
         if (batalha.temVencedor(p1, p2)) {
             assertEquals(hpFinalP2, p2.getVida(), "HP do defensor ao final do combate está incorreto.");
         }
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "6, 4, 6, 4, 6, 6, 4, 5, 1", // Dano final esperado é 1
+            "6, 4, 6, 4, 8, 6, 4, 6, 1"  // Dano final esperado é 1 (mínimo)
+    })
+    void ataqueComDanoFinal(int atkP1, int defP1, int velP1, int resP1,
+                            int atkP2, int defP2, int velP2, int resP2,
+                            int esperadoDanoFinal) {
+        assasino1.setAtaque(atkP1);
+        assasino1.setDefesa(defP1);
+        assasino1.setVelocidade(velP1);
+        assasino1.setResistencia(resP1);
 
-    @Test
-    void ataqueEsquivado(){
+        guerreiro2.setAtaque(atkP2);
+        guerreiro2.setDefesa(defP2);
+        guerreiro2.setVelocidade(velP2);
+        guerreiro2.setResistencia(resP2);
 
-        // INICIALIZAÇÃO DE ATRIBUTOS
-        // vamos considerar um assassino com
-        // alto nivel de xp e extramamente veloz
-
-        guerreiro2.setAtaque(7);
-        guerreiro2.setResistencia(7);
-        guerreiro2.setDefesa(3);
-        guerreiro2.setVelocidade(3);
-
-        assasino1.setAtaque(10);
-        assasino1.setDefesa(3);
-        assasino1.setVelocidade(25);
-        assasino1.setResistencia(3);
-        int vidaInicialAssassino = 100;
-        assasino1.setVida(vidaInicialAssassino);
-
-        // o HP do assassino deve ser o igual a 100 caso ele se evada
-        batalha.atacar(guerreiro2,assasino1);
-        assertEquals(vidaInicialAssassino, assasino1.getVida());
-
-
-    }
-
-
-    @Test
-    void round1_Assassino1_X_Guerreiro2AmbosComGolpeCritico(){
-
-        // INICIALIZAÇÃO DE ATRIBUTOS
-        assasino1.setAtaque(7);
-        assasino1.setDefesa(3);
-        assasino1.setVelocidade(7);
-        assasino1.setResistencia(3);
-
-        guerreiro2.setAtaque(7);
-        guerreiro2.setResistencia(7);
-        guerreiro2.setDefesa(3);
-        guerreiro2.setVelocidade(3);
-
-        // NAO VOU CHECAR POIS JA CHEQUEI PREVIAMENTE EM "PersonagemTest.Java"
-//        assasino1.checarRegraDeClasse();
-//        assasino1.checarTotal();
-//        assasino1.checarValorMinimo();
-//
-//        guerreiro2.checarValorMinimo();
-//        guerreiro2.checarTotal();
-//        guerreiro2.checarValorMinimo();
-
-
-        //TESTANDO QUEM COMEÇA - É ESPERADO QUE SEJA O ASSASSINO1 (P1)
-        String assassinoComeca= "personagem 1 começa";
-        String guerreiroComeca= "personagem 2 começa";
-        String quemComeca = batalha.determinarQuemComecaAtacando(assasino1,guerreiro2);
-        assertEquals(quemComeca,assassinoComeca );
-        assertNotEquals(quemComeca,guerreiroComeca);
-
-        //ASSASSINO ATACANDO
-        //dano: 6
         int danoBase = batalha.calcularDanoBase(assasino1, 2);
-        boolean golpeCritico = true;
-        int danoFinal = batalha.calcularDanoFinal(danoBase, golpeCritico, guerreiro2);
-        batalha.removerHP(danoFinal,guerreiro2);
-
-        assertEquals(94 , guerreiro2.getVida());
-
-        //GUERREIRO ATACANDO
-
-         danoBase = batalha.calcularDanoBase(guerreiro2, 2);
-         golpeCritico = true;
-         danoFinal = batalha.calcularDanoFinal(danoBase, golpeCritico, assasino1);
-        batalha.removerHP(danoFinal,assasino1);
-
-        assertEquals(94 ,assasino1.getVida());
-
-
-        //ESTADO PÓS PRIMEIRO ROUND
-
-
-
-//        while(!batalha.temVencedor(assasino1,guerreiro2)){
-//            batalha.atacar(assasino1, guerreiro2);
-//            batalha.temVencedor(assasino1,guerreiro2);
-//            batalha.atacar(guerreiro2, assasino1);
-//        }
-//        batalha.quemVenceu(assasino1,guerreiro2);
-//        String AssassinoVenceu = "O vencedor do confronto foi: "+assasino1;
-//        String GuerreiroVenceu = "O vencedor do confronto foi: "+guerreiro2;
-
-
-
-    }
-
-
-    @Test
-    void ataqueComDanoFinalIgualA1(){
-
-        //DANO FINAL DEVE SER 1
-
-        // INICIALIZAÇÃO DE ATRIBUTOS
-        assasino1.setAtaque(6);
-        assasino1.setDefesa(4);
-        assasino1.setVelocidade(6);
-        assasino1.setResistencia(4);
-
-        guerreiro2.setAtaque(6);
-        guerreiro2.setResistencia(6);
-        guerreiro2.setDefesa(5);
-        guerreiro2.setVelocidade(3);
-
-        // ataque base esperado 6
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-
-        // (6 - 5) = 1
         int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, guerreiro2);
-
-        assertEquals(1, danoInfrigido);
-
-
+        assertEquals(esperadoDanoFinal, danoInfrigido);
     }
-    @Test
-    void ataqueComDanoFinalIgualA0(){
-
-        //DANO FINAL DEVE SER 0
-
-        // INICIALIZAÇÃO DE ATRIBUTOS
-        assasino1.setAtaque(6);
-        assasino1.setDefesa(4);
-        assasino1.setVelocidade(6);
-        assasino1.setResistencia(4);
-
-        //considere um guerreiro evoluido com atributos somando mais de 20
-        guerreiro2.setAtaque(8);
-        guerreiro2.setResistencia(8);
-        guerreiro2.setDefesa(6);
-        guerreiro2.setVelocidade(6);
-
-        // ataque base esperado 6
-        int danoBase = batalha.calcularDanoBase(assasino1,2);
-
-        // (6 - 6) = 0 --- Porem o dano minimo será = 1
-        int danoInfrigido = batalha.calcularDanoFinal(danoBase, false, guerreiro2);
-
-        assertEquals(1, danoInfrigido);
-
-
-    }
-
-
-
-
-
-
-
-
+    
 }
