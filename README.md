@@ -109,6 +109,10 @@ A seguir, estão exemplos das principais funcionalidades:
 
 ---
 
+## Relatórios Automatizados   
+- Disponíveis no diretório \batalha\target\site\jacoco\index.html
+- Relatório MC/DC em um arquivo markdown no diretório \batalha\target\site\jacoco
+
 ## Estrutura do Projeto
 
 ```plaintext
