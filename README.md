@@ -105,6 +105,7 @@ A seguir, estão exemplos das principais funcionalidades:
     - Validação dos atributos dos personagens.
     - Regras específicas das classes (`Guerreiro` e `Assassino`).
     - Mecânica de combate, como cálculo de dano e chance de evasão.
+    - Os relatórios do teste estão no diretório \batalha\target\site\jacoco\index.html
 
 ---
 
